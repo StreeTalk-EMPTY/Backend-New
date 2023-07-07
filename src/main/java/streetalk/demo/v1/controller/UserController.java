@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import streetalk.demo.v1.domain.Location;
+import streetalk.demo.v1.domain.Policy;
 import streetalk.demo.v1.dto.*;
 import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
 import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
 import streetalk.demo.v1.dto.User.*;
+import streetalk.demo.v1.repository.PolicyRepository;
 import streetalk.demo.v1.service.LocationService;
 import streetalk.demo.v1.service.SmsService;
 import streetalk.demo.v1.service.UserService;
@@ -21,6 +23,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -30,11 +33,22 @@ public class UserController {
     private final UserService userService;
     private final SmsService smsService;
     private final LocationService locationService;
+    private final PolicyRepository policyRepository;
 
     @GetMapping("/user")
     public ResponseEntity<MessageWithData> getUser(HttpServletRequest req) {
         UserResponseDto data = userService.getUser(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "get User info success!", data), HttpStatus.OK);
+    }
+
+    /**
+     * 현재 하나의 이용약관, 처리방침만 있다고 가정
+     * @return 개인정보 처리방침, 이용약관
+     * */
+    @GetMapping("/user/policy")
+    public ResponseEntity<MessageWithData> getPolicy() {
+        Optional<Policy> policy = policyRepository.findById(1L);
+        return new ResponseEntity<>(new MessageWithData(200, true, "get Policy success", policy), HttpStatus.OK);
     }
 
     @PostMapping("/user/auth")

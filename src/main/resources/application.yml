@@ -1,0 +1,56 @@
+spring:
+  profiles:
+    active: set1
+---
+spring:
+  config:
+    activate:
+      on-profile: "set1"
+    import: optional:file:.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+jwt:
+  accessSecret: ${JWT_SECRET}
+
+naverSNS:
+  serviceId : ${NAVER_ID}
+  accessKey : ${NAVER_ACCESS}
+  secretKey : ${NAVER_SECRET}
+
+kakaoMap:
+  apiKey : ${KAKAO_APIKEY}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS}
+      secret-key: ${AWS_SECRET}
+    s3:
+      bucket: ${S3_BUCKET}
+      url: ${S3_URL}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error

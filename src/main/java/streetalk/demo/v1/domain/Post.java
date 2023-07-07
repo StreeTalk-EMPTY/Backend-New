@@ -35,6 +35,7 @@ public class Post extends BaseTimeEntity{
     private Long scrapCount;
     @Column(nullable = false)
     private Long replyCount;
+    @Column(nullable = false)
     private String writer;
 
     @Column(nullable = false)

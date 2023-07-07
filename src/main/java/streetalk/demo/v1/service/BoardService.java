@@ -70,14 +70,14 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardListDto getBoardList(HttpServletRequest req){
+    public List<BoardDto> getBoardList(HttpServletRequest req){
         try{
             List<Board> boardList = boardRepository.findAll();
             List<BoardDto> boardDtoList = boardList.stream()
                     .map(b -> new BoardDto(b.getId(), b.getBoardName(),b.getCategory()))
                     .collect(Collectors.toList());
 
-            return new BoardListDto(boardDtoList);
+            return boardDtoList;
         }
         catch (Error e){
             throw new ArithmeticException(404,"Error for getBoardMainList or subboardList");
