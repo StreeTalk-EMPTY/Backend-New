@@ -70,6 +70,6 @@ jobs:
         labels: ${{ steps.docker_meta.outputs.labels }}
 
       # Workflow_dispatch
-#    - run:
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.DISPATCH_KEY }}
+    - run: gh api /repos/pxxnxx/Streetalk-Deploy/dispatches -f event_type='backend-event'
+      env:
+        GITHUB_TOKEN: ${{ secrets.DISPATCH_KEY }}
