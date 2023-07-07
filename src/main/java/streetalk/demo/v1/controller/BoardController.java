@@ -37,7 +37,8 @@ public class BoardController {
 
     @GetMapping("/board/list")
     public ResponseEntity<MessageWithData>getBoardList(HttpServletRequest req){
-        BoardListDto data=boardService.getBoardList(req);
+//        BoardListDto data=boardService.getBoardList(req);
+        List<BoardDto> data = boardService.getBoardList(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "getBoardListSuccess", data), HttpStatus.OK);
     }
 
