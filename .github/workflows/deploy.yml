@@ -37,6 +37,10 @@ jobs:
       env:
         ENV_PROPERTIES_DEV: ${{ secrets.ENV_PROPERTIES_DEV }}
 
+      # Grant gradlew Permission
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
       # Gradle Build
     - name: Build with Gradle
       run: ./gradlew build -x test
