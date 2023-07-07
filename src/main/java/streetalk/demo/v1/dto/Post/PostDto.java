@@ -2,6 +2,7 @@ package streetalk.demo.v1.dto.Post;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+import streetalk.demo.v1.domain.Post;
 
 import java.util.List;
 
