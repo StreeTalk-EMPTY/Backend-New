@@ -26,7 +26,7 @@ public class Post extends BaseTimeEntity{
     private Long id;
     @Column(nullable = false, length = 100)
     private String title;
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT", length = 1000)
     private String content;
 
     @Column(nullable = false)
