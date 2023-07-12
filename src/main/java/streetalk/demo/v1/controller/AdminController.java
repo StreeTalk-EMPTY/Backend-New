@@ -60,6 +60,9 @@ public class AdminController {
         return new ResponseEntity<>(new MessageOnly(200,true,"create notice Success"), HttpStatus.OK);
     }
 
+    /**
+     * 이미지로 되어있는 공지사항 올리는 API
+     * */
     @PostMapping("/admin/noticeImg")
     public ResponseEntity<MessageOnly> inputNoticeImg(@RequestParam("inputFiles") List<MultipartFile> multipartFile) throws IOException {
         adminService.inputNoticeImg(multipartFile);

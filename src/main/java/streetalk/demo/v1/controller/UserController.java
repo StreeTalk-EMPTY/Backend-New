@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import streetalk.demo.v1.domain.Location;
+import streetalk.demo.v1.domain.Notice;
 import streetalk.demo.v1.domain.Policy;
 import streetalk.demo.v1.dto.*;
 import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
 import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
 import streetalk.demo.v1.dto.User.*;
+import streetalk.demo.v1.repository.NoticeRepository;
 import streetalk.demo.v1.repository.PolicyRepository;
 import streetalk.demo.v1.service.LocationService;
 import streetalk.demo.v1.service.SmsService;
@@ -34,6 +36,7 @@ public class UserController {
     private final SmsService smsService;
     private final LocationService locationService;
     private final PolicyRepository policyRepository;
+    private final NoticeRepository noticeRepository;
 
     @GetMapping("/user")
     public ResponseEntity<MessageWithData> getUser(HttpServletRequest req) {
@@ -97,5 +100,16 @@ public class UserController {
     @PostMapping("/test")
     public void test(@RequestBody HashMap<String, Object> values) {
         Location data = locationService.getKoLocation(Double.parseDouble(values.get("x").toString()), Double.parseDouble(values.get("y").toString()));
+    }
+
+    /**
+     * 공지 사항 반환하는 API
+     * TODO UserController 에 두는게 맞는지
+     */
+    @GetMapping("/user/notice")
+    public ResponseEntity<MessageWithData> getNotice() {
+        // TODO Notice DTO 처리하는게 좋은지
+        List<Notice> noticeList = noticeRepository.findAll();
+        return new ResponseEntity<>(new MessageWithData(200, true, "get Notice Success", noticeList), HttpStatus.OK);
     }
 }
