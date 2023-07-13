@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.dto.Post.*;
+import streetalk.demo.v1.enums.Role;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.repository.*;
 
@@ -293,7 +294,7 @@ public class PostService {
         }
 
     }
-    public Boolean hasAuthority() {
-        return true;
+    public Boolean hasAuthority(User user, String name) {
+        return user.getName().equals(name) || user.getRole() == Role.ADMIN;
     }
 }
