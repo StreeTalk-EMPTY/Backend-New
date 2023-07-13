@@ -41,6 +41,9 @@ public class PostController {
     public ResponseEntity<MessageWithData> getPostById(HttpServletRequest req, @PathVariable Long postId){
         System.out.println("GET /post/{postId}");
         PostResponseDto data = postService.findPostById(req,postId);
+
+        User user = userService.getCurrentUser(req);
+        data.setHasAuthority(postService.hasAuthority(user, data.getPostWriterName()));
         return new ResponseEntity<>(new MessageWithData(200, true, "nicejob", data), HttpStatus.OK);
     }
 
