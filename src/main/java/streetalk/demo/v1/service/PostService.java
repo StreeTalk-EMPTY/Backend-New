@@ -48,7 +48,7 @@ public class PostService {
 
 //        if(!checkUserRecentWriteTime(user))
 //            throw new ArithmeticException(404, "글을 자주 올릴 수 없습니다.");
-        Board board = boardRepository.findBoardByBoardName(postDto.getBoard())
+        Board board = boardRepository.findBoardById(postDto.getBoardId())
                 .orElseThrow(() -> new ArithmeticException(404,"can't match board"));
         try{
             Post post = postRepository.save(
