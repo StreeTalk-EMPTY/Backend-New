@@ -149,7 +149,7 @@ public class PostService {
                     .postLike(like)
                     .postScrap(scrap)
                     .lastTime(Duration.between(post.getCreatedDate(), LocalDateTime.now()).getSeconds())
-                    .replyList(getRepliesByPost(post))
+                    .replyList(getRepliesByPost(post, user))
                     .images(postImageService.getPostImagesUrl(post))
                     .build();
         }catch(Error e){
@@ -159,11 +159,11 @@ public class PostService {
 
     //post의 댓글 가져오기
     @Transactional
-    public List<ReplyResponseDto> getRepliesByPost(Post post){
+    public List<ReplyResponseDto> getRepliesByPost(Post post, User user){
         List<Reply> replies = post.getReplies();
         return replies.stream()
                 .filter(reply -> !reply.getBlocked())
-                .map(reply -> replyService.getReplyToDto(reply))
+                .map(reply -> replyService.getReplyToDto(reply, user))
                 .collect(toList());
     }
 
