@@ -42,6 +42,7 @@ public class ReplyService {
             Reply reply=replyRepository.save(
                     Reply.builder()
                             .content(replyDto.getContent())
+                            // TODO 이렇게 처리하면 안되지않나
                             .writer("글쓴이")
                             .location(user.getLocation().getFullName())
                             .post(post)

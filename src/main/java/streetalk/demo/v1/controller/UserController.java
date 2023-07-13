@@ -9,6 +9,7 @@ import streetalk.demo.v1.domain.Location;
 import streetalk.demo.v1.domain.Notice;
 import streetalk.demo.v1.domain.Policy;
 import streetalk.demo.v1.dto.*;
+import streetalk.demo.v1.dto.Post.NoticeResponseDto;
 import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
 import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
 import streetalk.demo.v1.dto.User.*;
@@ -23,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -108,8 +110,17 @@ public class UserController {
      */
     @GetMapping("/user/notice")
     public ResponseEntity<MessageWithData> getNotice() {
-        // TODO Notice DTO 처리하는게 좋은지
         List<Notice> noticeList = noticeRepository.findAll();
-        return new ResponseEntity<>(new MessageWithData(200, true, "get Notice Success", noticeList), HttpStatus.OK);
+        List<NoticeResponseDto> data = new ArrayList<>();
+        for (Notice notice : noticeList) {
+            NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
+                            .title(notice.getTitle())
+                            .content(notice.getContent())
+                            .createDate(notice.getCreatedDate().toLocalDate())
+                            .build();
+            data.add(noticeResponseDto);
+        }
+
+        return new ResponseEntity<>(new MessageWithData(200, true, "get Notice Success", data), HttpStatus.OK);
     }
 }
