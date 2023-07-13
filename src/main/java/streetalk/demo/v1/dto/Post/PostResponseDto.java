@@ -25,6 +25,7 @@ public class PostResponseDto {
     private Long lastTime;
     private Boolean postLike;
     private Boolean postScrap;
+    private Boolean hasAuthority;
     private List<ReplyResponseDto> replyList;
     private List<String> images;
     
