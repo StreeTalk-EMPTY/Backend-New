@@ -22,6 +22,7 @@ public class PostListDto {
     private Long likeCount;
     private Long scrapCount;
     private Long replyCount;
+    private Boolean hasAuthority;
 
     public PostListDto(Post post) {
         this.postId = post.getId();

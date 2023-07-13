@@ -3,6 +3,7 @@ package streetalk.demo.v1.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import streetalk.demo.v1.domain.Post;
 import streetalk.demo.v1.dto.MessageOnly;
@@ -12,6 +13,7 @@ import streetalk.demo.v1.service.PostService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,6 +40,19 @@ public class PostController {
         PostResponseDto data = postService.findPostById(req,postId);
         return new ResponseEntity<>(new MessageWithData(200, true, "nicejob", data), HttpStatus.OK);
     }
+
+    @GetMapping("/post/test")
+    public ResponseEntity<MessageWithData> postTest(Authentication auth) {
+        List<Object> data = new ArrayList<>();
+        data.add(auth.getName());
+        data.add(auth.getCredentials());
+        data.add(auth.getDetails());
+        data.add(auth.getPrincipal());
+        data.add(auth.getAuthorities());
+
+        return new ResponseEntity<>(new MessageWithData(200, true, "test", data), HttpStatus.OK);
+
+    }
 /*
 paging의 정식 방법
  */
@@ -49,8 +64,12 @@ paging의 정식 방법
 //    }
 
     @GetMapping(value={"/post/list/{boardId}/{postId}", "/post/list/{boardId}"})
-    public ResponseEntity<MessageWithData> getPostList(@PathVariable Long boardId,@PathVariable(required = false) Long postId){
+    public ResponseEntity<MessageWithData> getPostList(@PathVariable Long boardId, @PathVariable(required = false) Long postId){
         List<PostListDto> data = postService.getPostListByPage(boardId, postId);
+//        for (PostListDto postListDto : data) {
+            // Auth 확인 필요
+//            postListDto.setHasAuthority(postService.hasAuthority());
+//        }
         return new ResponseEntity<>(new MessageWithData(200, true, "get postLists", data), HttpStatus.OK);
     }
 

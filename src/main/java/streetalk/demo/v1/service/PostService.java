@@ -291,5 +291,9 @@ public class PostService {
             }
             return true;
         }
+
+    }
+    public Boolean hasAuthority() {
+        return true;
     }
 }
