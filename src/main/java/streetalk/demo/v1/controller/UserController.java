@@ -38,7 +38,6 @@ public class UserController {
     private final SmsService smsService;
     private final LocationService locationService;
     private final PolicyRepository policyRepository;
-    private final NoticeRepository noticeRepository;
 
     @GetMapping("/user")
     public ResponseEntity<MessageWithData> getUser(HttpServletRequest req) {
@@ -110,17 +109,7 @@ public class UserController {
      */
     @GetMapping("/user/notice")
     public ResponseEntity<MessageWithData> getNotice() {
-        List<Notice> noticeList = noticeRepository.findAll();
-        List<NoticeResponseDto> data = new ArrayList<>();
-        for (Notice notice : noticeList) {
-            NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
-                            .title(notice.getTitle())
-                            .content(notice.getContent())
-                            .createDate(notice.getCreatedDate().toLocalDate())
-                            .build();
-            data.add(noticeResponseDto);
-        }
-
+        List<NoticeResponseDto> data = userService.getNoticeResponseDtos();
         return new ResponseEntity<>(new MessageWithData(200, true, "get Notice Success", data), HttpStatus.OK);
     }
 }

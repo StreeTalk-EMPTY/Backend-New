@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
+import streetalk.demo.v1.dto.Post.NoticeResponseDto;
 import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
 import streetalk.demo.v1.dto.User.*;
 import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
@@ -43,6 +44,7 @@ public class UserService {
     private final LocationService locationService;
     private final PostLikeRepository postLikeRepository;
     private final PostScrapRepository postScrapRepository;
+    private final NoticeRepository noticeRepository;
 
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
@@ -221,5 +223,17 @@ public class UserService {
         );
     }
 
-
+    public List<NoticeResponseDto> getNoticeResponseDtos() {
+        List<Notice> noticeList = noticeRepository.findAll();
+        List<NoticeResponseDto> noticeResponseDtoList = new ArrayList<>();
+        for (Notice notice : noticeList) {
+            NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
+                    .title(notice.getTitle())
+                    .content(notice.getContent())
+                    .createDate(notice.getCreatedDate().toLocalDate())
+                    .build();
+            noticeResponseDtoList.add(noticeResponseDto);
+        }
+        return noticeResponseDtoList;
+    }
 }
