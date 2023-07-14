@@ -8,6 +8,7 @@ import streetalk.demo.v1.dto.Post.LockReplyDto;
 import streetalk.demo.v1.dto.Post.ReplyDto;
 import streetalk.demo.v1.dto.Post.ReplyNameDto;
 import streetalk.demo.v1.dto.Post.ReplyResponseDto;
+import streetalk.demo.v1.enums.Role;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.repository.*;
 
@@ -41,6 +42,7 @@ public class ReplyService {
             Reply reply=replyRepository.save(
                     Reply.builder()
                             .content(replyDto.getContent())
+                            // TODO 이렇게 처리하면 안되지않나
                             .writer("글쓴이")
                             .location(user.getLocation().getFullName())
                             .post(post)
@@ -104,7 +106,7 @@ public class ReplyService {
     }
 
     @Transactional
-    public ReplyResponseDto getReplyToDto (Reply reply){
+    public ReplyResponseDto getReplyToDto(Reply reply, User user){
         return ReplyResponseDto.builder()
                 .replyId(reply.getId())
                 .replyWriterName(reply.getWriter())
@@ -112,7 +114,12 @@ public class ReplyService {
                 .content(reply.getContent())
                 .replyWriterId(reply.getUser().getId())
                 .lastTime(Duration.between(reply.getCreatedDate(), LocalDateTime.now()).getSeconds())
+                .hasAuthority(hasAuthority(user, reply.getWriter()))
                 .build();
+    }
+
+    public Boolean hasAuthority(User user, String name) {
+        return user.getName().equals(name) || user.getRole() == Role.ADMIN;
     }
 
     @Transactional

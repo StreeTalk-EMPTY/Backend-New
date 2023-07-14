@@ -16,8 +16,8 @@ public class Policy {
 
     @Id
     private Long id;
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String termsOfUse;
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String privatePolicy;
 }

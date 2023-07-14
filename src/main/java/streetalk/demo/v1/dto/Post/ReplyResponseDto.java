@@ -14,5 +14,6 @@ public class ReplyResponseDto {
     private String location;
     private String content;
     private Long lastTime;
+    private Boolean hasAuthority;
 //    private String name;
 }

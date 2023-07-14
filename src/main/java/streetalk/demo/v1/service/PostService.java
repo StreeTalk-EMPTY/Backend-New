@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.dto.Post.*;
+import streetalk.demo.v1.enums.Role;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.repository.*;
 
@@ -47,7 +48,7 @@ public class PostService {
 
 //        if(!checkUserRecentWriteTime(user))
 //            throw new ArithmeticException(404, "글을 자주 올릴 수 없습니다.");
-        Board board = boardRepository.findBoardByBoardName(postDto.getBoard())
+        Board board = boardRepository.findBoardById(postDto.getBoardId())
                 .orElseThrow(() -> new ArithmeticException(404,"can't match board"));
         try{
             Post post = postRepository.save(
@@ -148,7 +149,7 @@ public class PostService {
                     .postLike(like)
                     .postScrap(scrap)
                     .lastTime(Duration.between(post.getCreatedDate(), LocalDateTime.now()).getSeconds())
-                    .replyList(getRepliesByPost(post))
+                    .replyList(getRepliesByPost(post, user))
                     .images(postImageService.getPostImagesUrl(post))
                     .build();
         }catch(Error e){
@@ -158,11 +159,11 @@ public class PostService {
 
     //post의 댓글 가져오기
     @Transactional
-    public List<ReplyResponseDto> getRepliesByPost(Post post){
+    public List<ReplyResponseDto> getRepliesByPost(Post post, User user){
         List<Reply> replies = post.getReplies();
         return replies.stream()
                 .filter(reply -> !reply.getBlocked())
-                .map(reply -> replyService.getReplyToDto(reply))
+                .map(reply -> replyService.getReplyToDto(reply, user))
                 .collect(toList());
     }
 
@@ -291,5 +292,9 @@ public class PostService {
             }
             return true;
         }
+
+    }
+    public Boolean hasAuthority(User user, String name) {
+        return user.getName().equals(name) || user.getRole() == Role.ADMIN;
     }
 }
