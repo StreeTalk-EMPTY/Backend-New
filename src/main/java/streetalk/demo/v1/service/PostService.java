@@ -40,6 +40,7 @@ public class PostService {
     //post 저장
     @Transactional
     public void save(HttpServletRequest req, PostDto postDto){
+        System.out.println(postDto);
         User user = userService.getCurrentUser(req);
 
         //글쓴지 5분 지났는지 체크
