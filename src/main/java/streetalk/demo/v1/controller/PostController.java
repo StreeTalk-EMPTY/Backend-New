@@ -43,7 +43,7 @@ public class PostController {
         PostResponseDto data = postService.findPostById(req,postId);
 
         User user = userService.getCurrentUser(req);
-        data.setHasAuthority(postService.hasAuthority(user, data.getPostWriterName()));
+        data.setHasAuthority(postService.hasAuthority(user, data.getPostWriterId()));
         return new ResponseEntity<>(new MessageWithData(200, true, "nicejob", data), HttpStatus.OK);
     }
 
@@ -62,8 +62,8 @@ paging의 정식 방법
         List<PostListDto> data = postService.getPostListByPage(boardId, postId);
         User user = userService.getCurrentUser(req);
         for (PostListDto postListDto : data) {
-            // Auth 확인 필요
-            postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriter()));
+            // Auth 확인 필요 -> writer 대신 writerId로 변경 필요
+            postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriterId()));
         }
         return new ResponseEntity<>(new MessageWithData(200, true, "get postLists", data), HttpStatus.OK);
     }

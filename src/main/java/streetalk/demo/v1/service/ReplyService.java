@@ -115,14 +115,13 @@ public class ReplyService {
                 .content(reply.getContent())
                 .replyWriterId(reply.getUser().getId())
                 .lastTime(Duration.between(reply.getCreatedDate(), LocalDateTime.now()).getSeconds())
-                .hasAuthority(hasAuthority(user, reply.getWriter()))
+                .hasAuthority(hasAuthority(user, reply.getUser().getId()))
                 .isPrivate(reply.getIsPrivate())
-                .writerId(reply.getUser().getId())
                 .build();
     }
 
-    public Boolean hasAuthority(User user, String name) {
-        return user.getName().equals(name) || user.getRole() == Role.ADMIN;
+    public Boolean hasAuthority(User user, Long id) {
+        return user.getId().equals(id) || user.getRole() == Role.ADMIN;
     }
 
     @Transactional
