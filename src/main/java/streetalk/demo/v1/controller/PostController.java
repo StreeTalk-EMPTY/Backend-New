@@ -33,6 +33,7 @@ public class PostController {
     @PostMapping("/post")
     public ResponseEntity<MessageOnly> save(HttpServletRequest req, @ModelAttribute PostDto postDto){
         System.out.println("start POST /post");
+        System.out.println(postDto);
         postService.save(req, postDto);
         return new ResponseEntity<>(new MessageOnly(200, true, "post Save Success"), HttpStatus.OK);
     }
