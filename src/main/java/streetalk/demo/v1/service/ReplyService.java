@@ -49,6 +49,7 @@ public class ReplyService {
                             .user(user)
                             .reportCount(1L)
                             .blocked(false)
+                            .isPrivate(replyDto.getIsPrivate())
                             .build()
                 );
             if(!post.getUser().equals(user)){
@@ -115,6 +116,8 @@ public class ReplyService {
                 .replyWriterId(reply.getUser().getId())
                 .lastTime(Duration.between(reply.getCreatedDate(), LocalDateTime.now()).getSeconds())
                 .hasAuthority(hasAuthority(user, reply.getWriter()))
+                .isPrivate(reply.getIsPrivate())
+                .writerId(reply.getUser().getId())
                 .build();
     }
 

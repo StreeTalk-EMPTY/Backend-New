@@ -16,5 +16,6 @@ public class PostDto {
     private String title;
     private String content;
     private Boolean checkName;
+    private Boolean isPrivate;
     private List<MultipartFile> multipartFiles;
 }

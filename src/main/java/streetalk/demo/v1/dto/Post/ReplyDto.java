@@ -15,4 +15,5 @@ public class ReplyDto {
     private Long postId;
     private String content;
     private Boolean checkName;
+    private Boolean isPrivate;
 }

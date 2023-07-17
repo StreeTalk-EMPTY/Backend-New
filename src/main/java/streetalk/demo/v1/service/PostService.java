@@ -66,6 +66,7 @@ public class PostService {
                             .blocked(false)
                             .reportCount(0l)
                             .user(user)
+                            .isPrivate(postDto.getIsPrivate())
                             .build()
                 );
             //TODO value에 아무파일을 안넣어도 multipartFiles에 값이 계속 들어옴.. 왜그러지..
@@ -96,8 +97,6 @@ public class PostService {
             return true;
         LocalDateTime recentTime = user.getRecentWriteTime();
         LocalDateTime fiveMinutesBefore =  LocalDateTime.now().minusMinutes(5);
-        System.out.println(recentTime);
-        System.out.println(fiveMinutesBefore);
         return recentTime.isBefore(fiveMinutesBefore);
     }
 
@@ -153,7 +152,7 @@ public class PostService {
                     .replyList(getRepliesByPost(post, user))
                     .images(postImageService.getPostImagesUrl(post))
                     .isPrivate(post.getIsPrivate())
-                    .writerId(post.getId())
+                    .writerId(post.getUser().getId())
                     .build();
         }catch(Error e){
             throw new ArithmeticException(404,"Error for return post");
