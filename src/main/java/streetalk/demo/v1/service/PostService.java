@@ -152,6 +152,8 @@ public class PostService {
                     .lastTime(Duration.between(post.getCreatedDate(), LocalDateTime.now()).getSeconds())
                     .replyList(getRepliesByPost(post, user))
                     .images(postImageService.getPostImagesUrl(post))
+                    .isPrivate(post.getIsPrivate())
+                    .writerId(post.getId())
                     .build();
         }catch(Error e){
             throw new ArithmeticException(404,"Error for return post");

@@ -42,6 +42,9 @@ public class Post extends BaseTimeEntity{
     private Long reportCount;
     @Column(nullable = false)
     private Boolean blocked;
+    @Column
+    @Builder.Default
+    private Boolean isPrivate = false;
     public void reportCountUp(){
         this.reportCount++;
     }
