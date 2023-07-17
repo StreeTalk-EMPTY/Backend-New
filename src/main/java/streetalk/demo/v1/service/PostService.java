@@ -72,12 +72,13 @@ public class PostService {
                 );
             //TODO value에 아무파일을 안넣어도 multipartFiles에 값이 계속 들어옴.. 왜그러지..
             //postImage 저장 및 s3 upload
-            System.out.println(postDto.getMultipartFiles().isEmpty());
-            System.out.println(postDto.getMultipartFiles().size());
-            System.out.println(postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank());
+//            System.out.println(postDto.getMultipartFiles().isEmpty());
+//            System.out.println(postDto.getMultipartFiles().size());
+//            System.out.println(postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank());
 
-            if(postDto.getMultipartFiles().size()==1 && postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank()) { }
-            else if(!postDto.getMultipartFiles().isEmpty()){
+//            if(postDto.getMultipartFiles().size()==1 && postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank()) { }
+//            else if(!postDto.getMultipartFiles().isEmpty()){
+            if(!postDto.getMultipartFiles().isEmpty()){
                 try{
                     System.out.println("save images!!");
                     post.setImages(postImageService.setPostImages(user.getId(), post, postDto.getMultipartFiles()));
