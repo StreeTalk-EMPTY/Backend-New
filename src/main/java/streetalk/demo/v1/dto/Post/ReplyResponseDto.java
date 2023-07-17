@@ -15,7 +15,6 @@ public class ReplyResponseDto {
     private String content;
     private Long lastTime;
     private Boolean hasAuthority;
-    private Long writerId;
     private Boolean isPrivate;
 //    private String name;
 }

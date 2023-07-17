@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class PostService {
                             .blocked(false)
                             .reportCount(0l)
                             .user(user)
-                            .isPrivate(postDto.getIsPrivate())
+                            .isPrivate(postDto.getIsPrivate() != null?postDto.getIsPrivate() : false)
                             .build()
                 );
             //TODO value에 아무파일을 안넣어도 multipartFiles에 값이 계속 들어옴.. 왜그러지..
@@ -152,7 +153,6 @@ public class PostService {
                     .replyList(getRepliesByPost(post, user))
                     .images(postImageService.getPostImagesUrl(post))
                     .isPrivate(post.getIsPrivate())
-                    .writerId(post.getUser().getId())
                     .build();
         }catch(Error e){
             throw new ArithmeticException(404,"Error for return post");
@@ -296,7 +296,7 @@ public class PostService {
         }
 
     }
-    public Boolean hasAuthority(User user, String name) {
-        return user.getName().equals(name) || user.getRole() == Role.ADMIN;
+    public Boolean hasAuthority(User user, Long id) {
+        return Objects.equals(user.getId(), id) || user.getRole() == Role.ADMIN;
     }
 }
