@@ -78,7 +78,7 @@ public class PostService {
 
 //            if(postDto.getMultipartFiles().size()==1 && postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank()) { }
 //            else if(!postDto.getMultipartFiles().isEmpty()){
-            if(!postDto.getMultipartFiles().isEmpty()){
+            if(postDto.getMultipartFiles() != null && !postDto.getMultipartFiles().isEmpty()){
                 try{
                     System.out.println("save images!!");
                     post.setImages(postImageService.setPostImages(user.getId(), post, postDto.getMultipartFiles()));
