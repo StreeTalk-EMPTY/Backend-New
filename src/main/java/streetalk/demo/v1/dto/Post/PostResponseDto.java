@@ -26,6 +26,8 @@ public class PostResponseDto {
     private Boolean postLike;
     private Boolean postScrap;
     private Boolean hasAuthority;
+    private Long writerId;
+    private Boolean isPrivate;
     private List<ReplyResponseDto> replyList;
     private List<String> images;
     

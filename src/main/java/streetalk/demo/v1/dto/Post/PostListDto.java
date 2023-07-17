@@ -23,6 +23,8 @@ public class PostListDto {
     private Long scrapCount;
     private Long replyCount;
     private Boolean hasAuthority;
+    private Long writerId;
+    private Boolean isPrivate;
 
     public PostListDto(Post post) {
         this.postId = post.getId();
@@ -34,5 +36,7 @@ public class PostListDto {
         this.likeCount = post.getLikeCount();
         this.scrapCount = post.getScrapCount();
         this.replyCount = post.getReplyCount();
+        this.writerId = post.getId();
+        this.isPrivate = post.getIsPrivate();
     }
 }
