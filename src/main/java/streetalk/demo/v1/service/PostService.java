@@ -70,17 +70,8 @@ public class PostService {
                             .isPrivate(postDto.getIsPrivate() != null?postDto.getIsPrivate() : false)
                             .build()
                 );
-            //TODO value에 아무파일을 안넣어도 multipartFiles에 값이 계속 들어옴.. 왜그러지..
-            //postImage 저장 및 s3 upload
-//            System.out.println(postDto.getMultipartFiles().isEmpty());
-//            System.out.println(postDto.getMultipartFiles().size());
-//            System.out.println(postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank());
-
-//            if(postDto.getMultipartFiles().size()==1 && postDto.getMultipartFiles().get(0).getOriginalFilename().isBlank()) { }
-//            else if(!postDto.getMultipartFiles().isEmpty()){
             if(postDto.getMultipartFiles() != null && !postDto.getMultipartFiles().isEmpty()){
                 try{
-                    System.out.println("save images!!");
                     post.setImages(postImageService.setPostImages(user.getId(), post, postDto.getMultipartFiles()));
                 }catch (Exception e){
                     throw new ArithmeticException(404, "can't find file");
@@ -113,7 +104,6 @@ public class PostService {
             postId = postRepository.findFirstByOrderByCreatedDateDesc().getId();
             ++postId;
         }
-        System.out.println("postId = " + postId);
         Slice<Post> posts = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
         return posts.getContent()
                 .stream()
