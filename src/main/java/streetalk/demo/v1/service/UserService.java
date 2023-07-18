@@ -10,10 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
-import streetalk.demo.v1.dto.Post.NoticeResponseDto;
-import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
+import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.dto.User.*;
-import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
 import streetalk.demo.v1.enums.Role;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.jwt.JwtTokenProvider;
@@ -45,6 +43,7 @@ public class UserService {
     private final PostLikeRepository postLikeRepository;
     private final PostScrapRepository postScrapRepository;
     private final NoticeRepository noticeRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
@@ -235,5 +234,26 @@ public class UserService {
             noticeResponseDtoList.add(noticeResponseDto);
         }
         return noticeResponseDtoList;
+    }
+
+    public List<PostListDto> getMyPostList(HttpServletRequest req) {
+        User user = getCurrentUser(req);
+        List<Post> myPostList = postRepository.findByUser(user);
+        List<PostListDto> data = new ArrayList<>();
+
+        for (Post post : myPostList) {
+            PostListDto postListDto = PostListDto
+                    .builder()
+                    .postId(post.getId())
+                    .writer(post.getWriter())
+                    .writerId(user.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .isPrivate(post.getIsPrivate())
+                    .hasAuthority(true)
+                    .build();
+            data.add(postListDto);
+        }
+        return data;
     }
 }

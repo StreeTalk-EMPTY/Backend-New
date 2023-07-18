@@ -4,6 +4,7 @@ import lombok.*;
 import streetalk.demo.v1.domain.Industry;
 import streetalk.demo.v1.domain.Location;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Setter
@@ -27,6 +28,7 @@ public class PostResponseDto {
     private Boolean postScrap;
     private Boolean hasAuthority;
     private Boolean isPrivate;
+    private LocalDate createTime;
     private List<ReplyResponseDto> replyList;
     private List<String> images;
     

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import streetalk.demo.v1.domain.Location;
 import streetalk.demo.v1.domain.Notice;
 import streetalk.demo.v1.domain.Policy;
+import streetalk.demo.v1.domain.User;
 import streetalk.demo.v1.dto.*;
-import streetalk.demo.v1.dto.Post.NoticeResponseDto;
-import streetalk.demo.v1.dto.Post.PostLikeResponseDto;
-import streetalk.demo.v1.dto.Post.ScrapLikeResponseDto;
+import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.dto.User.*;
 import streetalk.demo.v1.repository.NoticeRepository;
 import streetalk.demo.v1.repository.PolicyRepository;
@@ -111,5 +111,16 @@ public class UserController {
     public ResponseEntity<MessageWithData> getNotice() {
         List<NoticeResponseDto> data = userService.getNoticeResponseDtos();
         return new ResponseEntity<>(new MessageWithData(200, true, "get Notice Success", data), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/authtest")
+    public void at(Authentication auth) {
+        System.out.println(auth.getName());
+    }
+    @GetMapping("/user/post")
+    public ResponseEntity<MessageWithData> getMyPostList(HttpServletRequest req) {
+        List<PostListDto> data = userService.getMyPostList(req);
+        return new ResponseEntity<>(new MessageWithData(200, true, "get My Post List Success", data), HttpStatus.OK);
     }
 }

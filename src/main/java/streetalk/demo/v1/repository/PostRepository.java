@@ -28,4 +28,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByCreatedDateAfterAndIndustry(LocalDateTime localDateTime, Industry industry);
     List<Post> findByCreatedDateAfterAndLocation(LocalDateTime localDateTime, Location location);
     List<Post> findTop5ByOrderByCreatedDateDesc();
+
+    List<Post> findByUser(User user);
 }
