@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
@@ -289,5 +286,22 @@ public class PostService {
     }
     public Boolean hasAuthority(User user, Long id) {
         return Objects.equals(user.getId(), id) || user.getRole() == Role.ADMIN;
+    }
+
+    public List<PostListDto> toPostListDto(List<Post> postList) {
+        List<PostListDto> data = new ArrayList<>();
+        for (Post post : postList) {
+            PostListDto postListDto = PostListDto
+                    .builder()
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .isPrivate(post.getIsPrivate())
+                    .postId(post.getId())
+                    .writer(post.getWriter())
+                    .createTime(post.getCreatedDate().toLocalDate())
+                    .build();
+            data.add(postListDto);
+        }
+        return data;
     }
 }
