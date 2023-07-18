@@ -26,6 +26,7 @@ public class PostListDto {
     private Boolean hasAuthority;
     private Long writerId;
     private Boolean isPrivate;
+    private LocalDate createTime;
 
     public PostListDto(Post post) {
         this.postId = post.getId();
@@ -39,5 +40,6 @@ public class PostListDto {
         this.replyCount = post.getReplyCount();
         this.writerId = post.getId();
         this.isPrivate = post.getIsPrivate();
+        this.createTime = post.getCreatedDate().toLocalDate();;
     }
 }

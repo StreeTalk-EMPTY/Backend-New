@@ -88,21 +88,9 @@ paging의 정식 방법
     }
 
     @GetMapping("/searchPost/{word}")
-    public ResponseEntity<MessageWithData>postSearch(HttpServletRequest req,@PathVariable("word") String key){
-        List<Post> PostList=postService.searchPost(req,key);
-        List<PostResponseDto> data = new ArrayList<>();
-        for (Post post : PostList) {
-            PostResponseDto postResponseDto = PostResponseDto
-                    .builder()
-                    .postWriterId(post.getUser().getId())
-                    .isPrivate(post.getIsPrivate())
-                    .boardName(post.getBoard().getBoardName())
-                    .content(post.getContent())
-                    .createTime(post.getCreatedDate().toLocalDate())
-                    .postWriterName(post.getWriter())
-                    // TODO 필요한 것 물어봐야 함
-                    .build();
-        }
+    public ResponseEntity<MessageWithData>postSearch(HttpServletRequest req, @PathVariable("word") String key){
+        List<Post> postList = postService.searchPost(req,key);
+        List<PostListDto> data = postService.toPostListDto(postList);
         return new ResponseEntity<>(new MessageWithData(200, true, "search Post Success", data), HttpStatus.OK);
     }
     @PostMapping("/lockPost")

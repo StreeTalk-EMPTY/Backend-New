@@ -251,6 +251,7 @@ public class UserService {
                     .content(post.getContent())
                     .isPrivate(post.getIsPrivate())
                     .hasAuthority(true)
+                    .createTime(post.getCreatedDate().toLocalDate())
                     .build();
             data.add(postListDto);
         }
