@@ -288,9 +288,17 @@ public class PostService {
         return Objects.equals(user.getId(), id) || user.getRole() == Role.ADMIN;
     }
 
-    public List<PostListDto> toPostListDto(List<Post> postList) {
+    public List<PostListDto> toPostListDto(List<Post> postList, User user) {
         List<PostListDto> data = new ArrayList<>();
         for (Post post : postList) {
+            Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            Boolean like = false;
+            Boolean scrap = false;
+            if(postLike.isPresent())
+                like = true;
+            if(postScarp.isPresent())
+                scrap = true;
             PostListDto postListDto = PostListDto
                     .builder()
                     .title(post.getTitle())
@@ -299,6 +307,11 @@ public class PostService {
                     .postId(post.getId())
                     .writer(post.getWriter())
                     .createTime(post.getCreatedDate().toLocalDate())
+                    .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
                     .build();
             data.add(postListDto);
         }

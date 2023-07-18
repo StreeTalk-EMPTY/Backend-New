@@ -162,7 +162,9 @@ public class UserService {
         User user = getCurrentUser(req);
         List<PostLike> postLikeList = postLikeRepository.findByUser(user);
         List<PostLikeResponseDto> postlikeResponseDtos = new ArrayList<>();
-        for (PostLike postLike : postLikeList) {
+//        for (PostLike postLike : postLikeList) {
+        for (int i=postLikeList.size()-1; i>=0; i--) {
+            PostLike postLike = postLikeList.get(i);
             PostLikeResponseDto postLikeResponseDto = PostLikeResponseDto.builder()
                     .name(user.getName())
                     .location(user.getLocation())
@@ -185,7 +187,9 @@ public class UserService {
         User user = getCurrentUser(req);
         List<PostScarp> postScarpList = postScrapRepository.findByUser(user);
         List<ScrapLikeResponseDto> scraplikeResponseDtos = new ArrayList<>();
-        for (PostScarp postScarp : postScarpList) {
+//        for (PostScarp postScarp : postScarpList) {
+        for (int i=postScarpList.size()-1; i>=0; i--) {
+            PostScarp postScarp = postScarpList.get(i);
             ScrapLikeResponseDto scrapLikeResponseDto = ScrapLikeResponseDto.builder()
                     .name(user.getName())
                     .location(user.getLocation())

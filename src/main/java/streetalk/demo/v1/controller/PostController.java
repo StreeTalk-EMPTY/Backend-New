@@ -90,19 +90,17 @@ paging의 정식 방법
     @GetMapping("/searchPost/{word}")
     public ResponseEntity<MessageWithData>postSearch(HttpServletRequest req, @PathVariable("word") String key){
         List<Post> postList = postService.searchPost(req,key);
-        List<PostListDto> data = postService.toPostListDto(postList);
+        List<PostListDto> data = postService.toPostListDto(postList, userService.getCurrentUser(req));
         return new ResponseEntity<>(new MessageWithData(200, true, "search Post Success", data), HttpStatus.OK);
     }
     @PostMapping("/lockPost")
     public ResponseEntity<MessageWithData> lockReply(HttpServletRequest req, @RequestBody LockPostDto lockPostDto){
-        System.out.println("POST /lockPost");
         Boolean data=postService.lockPost(req, lockPostDto);
         return new ResponseEntity<>(new MessageWithData(200,true,"lock post  Success", data),HttpStatus.OK);
     }
 
     @DeleteMapping("/post/{postId}")
     public ResponseEntity<MessageOnly> deletePost(HttpServletRequest req, @PathVariable("postId") Long id) {
-        System.out.println("DELETE /post/{postId}");
         postService.deletePost(req,id);
         return new ResponseEntity<>(new MessageOnly(200,true,"post delete Success"),HttpStatus.OK);
     }
