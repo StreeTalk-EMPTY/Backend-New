@@ -89,6 +89,12 @@ public class UserController {
         return new ResponseEntity<>(new MessageOnly(200, true, "update User Success"), HttpStatus.OK);
     }
 
+    @DeleteMapping("/user")
+    public ResponseEntity<MessageOnly> deleteUser(HttpServletRequest req) {
+        userService.deleteUser(req);
+        return new ResponseEntity<>(new MessageOnly(200, true, "delete User Success"), HttpStatus.OK);
+    }
+
 //    @GetMapping("/user/{id}/postlike")
 //    public ResponseEntity<MessageWithData> getUserPostLike(HttpServletRequest req){
 //        List<PostLikeResponseDto>data=userService.getUserPostLike(req);
