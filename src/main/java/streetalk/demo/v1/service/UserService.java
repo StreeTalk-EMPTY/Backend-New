@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
+import streetalk.demo.v1.dto.NearCity;
 import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.dto.User.*;
 import streetalk.demo.v1.enums.Role;
@@ -356,5 +357,22 @@ public class UserService {
             data.add(postListDto);
         }
         return data;
+    }
+
+    public ProfileResponseDto getUserProfile(HttpServletRequest req, ProfileRequestDto profileRequestDto) {
+        User user = getCurrentUser(req);
+        Double latitude = profileRequestDto.getLatitude();
+        Double longitude = profileRequestDto.getLongitude();
+        Location location = locationService.getKoLocation(longitude, latitude);
+        String currentCity = location.getFullName();
+        List<NearCity> nearCities = locationService.getNearCities(location);
+        ProfileResponseDto profileResponseDto = ProfileResponseDto
+                .builder()
+                .userName(user.getName())
+                .industry(user.getIndustry().getName())
+                .currentCity(currentCity)
+                .nearCities(nearCities)
+                .build();
+        return profileResponseDto;
     }
 }

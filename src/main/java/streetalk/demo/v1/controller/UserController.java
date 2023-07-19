@@ -68,10 +68,14 @@ public class UserController {
         return new ResponseEntity<>(new MessageWithData(200, true, "auth Success", data), HttpStatus.OK);
     }
 
-//    @PostMapping("/user/profile")
-//    public ResponseEntity<MessageWithData> getUserProfile(HttpServletRequest req, @RequestBody ) {
-//
-//    }
+    // 프로필 변경 눌렀을 때 위도, 경도 받아서 유저 정보와 새로운 위치 정보를 함께 return
+    @PostMapping("/user/profile")
+    public ResponseEntity<MessageWithData> getUserProfile(HttpServletRequest req, @RequestBody ProfileRequestDto profileRequestDto) {
+
+        ProfileResponseDto data = userService.getUserProfile(req, profileRequestDto);
+
+        return new ResponseEntity<>(new MessageWithData(200, true, "get userProfile success", data), HttpStatus.OK);
+    }
 
     @PutMapping("/user/refreshToken")
     public ResponseEntity<MessageWithData> refreshToken(HttpServletRequest req) {
