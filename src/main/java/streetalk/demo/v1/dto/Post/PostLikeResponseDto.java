@@ -15,5 +15,7 @@ public class PostLikeResponseDto {
     private String content;
     private Long likecount;
     private Long scrapcount;
+    private Boolean postScrap;
+    private Boolean postLike;
     private Object data;
 }
