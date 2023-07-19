@@ -166,13 +166,27 @@ public class UserService {
 //        for (PostLike postLike : postLikeList) {
         for (int i=postLikeList.size()-1; i>=0; i--) {
             PostLike postLike = postLikeList.get(i);
+            Post post = postLike.getPost();
+
+            // TODO
+            //  따로 서비스로 뺄 것
+            Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScarp> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
+            boolean like = false;
+            boolean scrap = false;
+            if(isPostLike.isPresent())
+                like = true;
+            if(isPostScarp.isPresent())
+                scrap = true;
             PostLikeResponseDto postLikeResponseDto = PostLikeResponseDto.builder()
                     .name(user.getName())
                     .location(user.getLocation())
-                    .title(postLike.getPost().getTitle())
-                    .content(postLike.getPost().getContent())
-                    .likecount(postLike.getPost().getLikeCount())
-                    .scrapcount(postLike.getPost().getScrapCount())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .likecount(post.getLikeCount())
+                    .scrapcount(post.getScrapCount())
+                    .postLike(like)
+                    .postScrap(scrap)
                     .build();
             postlikeResponseDtos.add(postLikeResponseDto);
         }
@@ -191,6 +205,18 @@ public class UserService {
 //        for (PostScarp postScarp : postScarpList) {
         for (int i=postScarpList.size()-1; i>=0; i--) {
             PostScarp postScarp = postScarpList.get(i);
+            Post post = postScarp.getPost();
+
+            // TODO
+            //  따로 서비스로 뺄 것
+            Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScarp> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
+            boolean like = false;
+            boolean scrap = false;
+            if(isPostLike.isPresent())
+                like = true;
+            if(isPostScarp.isPresent())
+                scrap = true;
             ScrapLikeResponseDto scrapLikeResponseDto = ScrapLikeResponseDto.builder()
                     .name(user.getName())
                     .location(user.getLocation())
@@ -198,6 +224,8 @@ public class UserService {
                     .content(postScarp.getPost().getContent())
                     .likecount(postScarp.getPost().getLikeCount())
                     .scrapcount(postScarp.getPost().getScrapCount())
+                    .postLike(like)
+                    .postScrap(scrap)
                     .build();
             scraplikeResponseDtos.add(scrapLikeResponseDto);
         }
@@ -250,8 +278,8 @@ public class UserService {
             Post post = myPostList.get(i);
             Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
             Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post, user);
-            Boolean like = false;
-            Boolean scrap = false;
+            boolean like = false;
+            boolean scrap = false;
             if(postLike.isPresent())
                 like = true;
             if(postScarp.isPresent())

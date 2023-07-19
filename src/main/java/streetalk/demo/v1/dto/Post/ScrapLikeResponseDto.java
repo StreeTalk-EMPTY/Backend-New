@@ -15,5 +15,7 @@ public class ScrapLikeResponseDto {
     private String content;
     private Long likecount;
     private Long scrapcount;
+    private Boolean postScrap;
+    private Boolean postLike;
     private Object data;
 }
