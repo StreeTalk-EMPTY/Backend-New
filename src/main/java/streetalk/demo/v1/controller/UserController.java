@@ -98,6 +98,12 @@ public class UserController {
         return new ResponseEntity<>(new MessageWithData(200, true, "getUserScrapLike success!", data), HttpStatus.OK);
     }
 
+    @GetMapping("/user/postMyReply")
+    public ResponseEntity<MessageWithData> getPostListMyReply(HttpServletRequest req) {
+        List<PostListDto> data = userService.getPostListMyReply(req);
+        return new ResponseEntity<>(new MessageWithData(200, true, "get Post List With My Reply success", data), HttpStatus.OK);
+    }
+
     @PostMapping("/test")
     public void test(@RequestBody HashMap<String, Object> values) {
         Location data = locationService.getKoLocation(Double.parseDouble(values.get("x").toString()), Double.parseDouble(values.get("y").toString()));

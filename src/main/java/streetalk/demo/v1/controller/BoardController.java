@@ -26,7 +26,6 @@ public class BoardController {
 //        return new ResponseEntity<>(new MessageWithData(200, true, "auth Success", data), HttpStatus.OK);
 //    }
 
-    // TODO 중복 안되게 제약조건 필요
     @PostMapping("/boardLike/{boardId}")
     public ResponseEntity<MessageOnly> BoardLike(HttpServletRequest req, @PathVariable("boardId") Long id) {
         boardService.BoardLike(req, id);
