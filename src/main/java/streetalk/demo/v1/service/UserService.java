@@ -159,10 +159,10 @@ public class UserService {
     }
 
     @Transactional
-    public List<PostLikeResponseDto> getUserPostLike(HttpServletRequest req) {
+    public List<PostListDto> getUserPostLike(HttpServletRequest req) {
         User user = getCurrentUser(req);
         List<PostLike> postLikeList = postLikeRepository.findByUser(user);
-        List<PostLikeResponseDto> postlikeResponseDtos = new ArrayList<>();
+        List<PostListDto> data = new ArrayList<>();
 //        for (PostLike postLike : postLikeList) {
         for (int i=postLikeList.size()-1; i>=0; i--) {
             PostLike postLike = postLikeList.get(i);
@@ -178,35 +178,38 @@ public class UserService {
                 like = true;
             if(isPostScarp.isPresent())
                 scrap = true;
-            PostLikeResponseDto postLikeResponseDto = PostLikeResponseDto.builder()
-                    .name(user.getName())
-                    .location(user.getLocation())
+            PostListDto postListDto = PostListDto
+                    .builder()
                     .title(post.getTitle())
                     .content(post.getContent())
-                    .likecount(post.getLikeCount())
-                    .scrapcount(post.getScrapCount())
-                    .postLike(like)
+                    .isPrivate(post.getIsPrivate())
+                    .postId(post.getId())
+                    .writer(post.getWriter())
+                    .createTime(post.getCreatedDate().toLocalDate())
                     .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
                     .build();
-            postlikeResponseDtos.add(postLikeResponseDto);
+            data.add(postListDto);
         }
         try {
-            return postlikeResponseDtos;
+            return data;
         } catch (Error e) {
             throw new ArithmeticException(404, "Error for return post");
         }
     }
 
     @Transactional
-    public List<ScrapLikeResponseDto> getUserScrapLike(HttpServletRequest req) {
+    public List<PostListDto> getUserScrapLike(HttpServletRequest req) {
         User user = getCurrentUser(req);
         List<PostScarp> postScarpList = postScrapRepository.findByUser(user);
-        List<ScrapLikeResponseDto> scraplikeResponseDtos = new ArrayList<>();
 //        for (PostScarp postScarp : postScarpList) {
+        List<PostListDto> data = new ArrayList<>();
         for (int i=postScarpList.size()-1; i>=0; i--) {
             PostScarp postScarp = postScarpList.get(i);
             Post post = postScarp.getPost();
-
             // TODO
             //  따로 서비스로 뺄 것
             Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
@@ -217,20 +220,24 @@ public class UserService {
                 like = true;
             if(isPostScarp.isPresent())
                 scrap = true;
-            ScrapLikeResponseDto scrapLikeResponseDto = ScrapLikeResponseDto.builder()
-                    .name(user.getName())
-                    .location(user.getLocation())
-                    .title(postScarp.getPost().getTitle())
-                    .content(postScarp.getPost().getContent())
-                    .likecount(postScarp.getPost().getLikeCount())
-                    .scrapcount(postScarp.getPost().getScrapCount())
-                    .postLike(like)
+            PostListDto postListDto = PostListDto
+                    .builder()
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .isPrivate(post.getIsPrivate())
+                    .postId(post.getId())
+                    .writer(post.getWriter())
+                    .createTime(post.getCreatedDate().toLocalDate())
                     .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
                     .build();
-            scraplikeResponseDtos.add(scrapLikeResponseDto);
+            data.add(postListDto);
         }
         try {
-            return scraplikeResponseDtos;
+            return data;
         } catch (Error e) {
             throw new ArithmeticException(404, "Error for return post");
         }
