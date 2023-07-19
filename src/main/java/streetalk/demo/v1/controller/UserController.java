@@ -68,6 +68,11 @@ public class UserController {
         return new ResponseEntity<>(new MessageWithData(200, true, "auth Success", data), HttpStatus.OK);
     }
 
+//    @PostMapping("/user/profile")
+//    public ResponseEntity<MessageWithData> getUserProfile(HttpServletRequest req, @RequestBody ) {
+//
+//    }
+
     @PutMapping("/user/refreshToken")
     public ResponseEntity<MessageWithData> refreshToken(HttpServletRequest req) {
         RefreshTokenDto data = userService.refreshToken(req);
