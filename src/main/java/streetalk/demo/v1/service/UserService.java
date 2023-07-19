@@ -23,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -171,7 +170,7 @@ public class UserService {
             // TODO
             //  따로 서비스로 뺄 것
             Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
-            Optional<PostScarp> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
             boolean like = false;
             boolean scrap = false;
             if(isPostLike.isPresent())
@@ -204,16 +203,16 @@ public class UserService {
     @Transactional
     public List<PostListDto> getUserScrapLike(HttpServletRequest req) {
         User user = getCurrentUser(req);
-        List<PostScarp> postScarpList = postScrapRepository.findByUser(user);
+        List<PostScrap> postScrapList = postScrapRepository.findByUser(user);
 //        for (PostScarp postScarp : postScarpList) {
         List<PostListDto> data = new ArrayList<>();
-        for (int i=postScarpList.size()-1; i>=0; i--) {
-            PostScarp postScarp = postScarpList.get(i);
-            Post post = postScarp.getPost();
+        for (int i = postScrapList.size()-1; i>=0; i--) {
+            PostScrap postScrap = postScrapList.get(i);
+            Post post = postScrap.getPost();
             // TODO
             //  따로 서비스로 뺄 것
             Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
-            Optional<PostScarp> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> isPostScarp = postScrapRepository.findByPostAndUser(post, user);
             boolean like = false;
             boolean scrap = false;
             if(isPostLike.isPresent())
@@ -284,7 +283,7 @@ public class UserService {
         for (int i=myPostList.size()-1; i>=0; i--) {
             Post post = myPostList.get(i);
             Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-            Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
             boolean like = false;
             boolean scrap = false;
             if(postLike.isPresent())

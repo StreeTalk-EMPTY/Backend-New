@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
@@ -116,7 +115,7 @@ public class PostService {
         Post post=postRepository.findById(postId)
                 .orElseThrow(()->new ArithmeticException(404,"해당 게시물이 없습니다."));
         Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-        Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post,user);
+        Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post,user);
         Boolean like = false;
         Boolean scrap = false;
         if(postLike.isPresent())
@@ -207,18 +206,18 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ArithmeticException(404, "Doesn't Exist post"));
 
-        Optional<PostScarp> scrapLikes = postScrapRepository.findByPostAndUser(post, user);
+        Optional<PostScrap> scrapLikes = postScrapRepository.findByPostAndUser(post, user);
 
         //만약 postLike 취소하는 경우
         if(scrapLikes.isPresent()){
-            scrapLikes.ifPresent(thisPostScarp ->{
-                postScrapRepository.delete(thisPostScarp);
+            scrapLikes.ifPresent(thisPostScrap ->{
+                postScrapRepository.delete(thisPostScrap);
                 post.postScrapDown();
             });
             return false;
         } else {
             postScrapRepository.save(
-                    PostScarp.builder()
+                    PostScrap.builder()
                             .post(post)
                             .user(user)
                             .build());
@@ -294,7 +293,7 @@ public class PostService {
         List<PostListDto> data = new ArrayList<>();
         for (Post post : postList) {
             Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-            Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
             Boolean like = false;
             Boolean scrap = false;
             if(postLike.isPresent())

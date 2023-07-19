@@ -7,6 +7,6 @@ import streetalk.demo.v1.domain.*;
 import java.util.Optional;
 
 @Repository
-public interface ScrapRepository extends JpaRepository<PostScarp,Long> {
-    Optional<PostScarp> findByPostAndUser(Post post, User user);
+public interface ScrapRepository extends JpaRepository<PostScrap,Long> {
+    Optional<PostScrap> findByPostAndUser(Post post, User user);
 }
