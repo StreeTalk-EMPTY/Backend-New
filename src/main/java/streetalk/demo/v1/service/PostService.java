@@ -288,6 +288,8 @@ public class PostService {
         return Objects.equals(user.getId(), id) || user.getRole() == Role.ADMIN;
     }
 
+    // TODO
+    //  postListDto에 넣어서 사용할 것
     public List<PostListDto> toPostListDto(List<Post> postList, User user) {
         List<PostListDto> data = new ArrayList<>();
         for (Post post : postList) {
