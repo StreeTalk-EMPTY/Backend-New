@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import streetalk.demo.v1.domain.Board;
 import streetalk.demo.v1.domain.Post;
 import streetalk.demo.v1.domain.User;
 import streetalk.demo.v1.dto.MessageOnly;
 import streetalk.demo.v1.dto.MessageWithData;
 import streetalk.demo.v1.dto.Post.*;
+import streetalk.demo.v1.service.BoardService;
 import streetalk.demo.v1.service.PostService;
 import streetalk.demo.v1.service.UserService;
 
@@ -25,6 +27,7 @@ public class PostController {
 
     private final PostService postService;
     private final UserService userService;
+    private final BoardService boardService;
     @PostMapping("/test/post")
     public String testPost(HttpServletRequest req, @ModelAttribute PostDto postDto) {
         postService.save(req, postDto);
@@ -60,12 +63,18 @@ paging의 정식 방법
 
     @GetMapping(value={"/post/list/{boardId}/{postId}", "/post/list/{boardId}"})
     public ResponseEntity<MessageWithData> getPostList(@PathVariable Long boardId, @PathVariable(required = false) Long postId, HttpServletRequest req){
-        List<PostListDto> data = postService.getPostListByPage(boardId, postId);
+        List<PostListDto> postListDtoList = postService.getPostListByPage(boardId, postId);
         User user = userService.getCurrentUser(req);
-        for (PostListDto postListDto : data) {
+
+        for (PostListDto postListDto : postListDtoList) {
             // Auth 확인 필요 -> writer 대신 writerId로 변경 필요
             postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriterId()));
         }
+        BoardResponseDto data = BoardResponseDto
+                .builder()
+                .isBoardLike(userService.getIsBoardLike(user, boardId))
+                .postListDto(postListDtoList)
+                .build();
         return new ResponseEntity<>(new MessageWithData(200, true, "get postLists", data), HttpStatus.OK);
     }
 

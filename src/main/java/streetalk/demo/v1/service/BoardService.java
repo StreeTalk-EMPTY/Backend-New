@@ -98,5 +98,10 @@ public class BoardService {
         }
     }
 
+    public Board getBoardByBoardId(Long boardId) {
+        return boardRepository.findBoardById(boardId)
+                .orElseThrow(() -> new ArithmeticException(404, "can't find Board"));
+    }
+
 
 }

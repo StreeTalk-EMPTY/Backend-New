@@ -44,6 +44,7 @@ public class UserService {
     private final PostScrapRepository postScrapRepository;
     private final NoticeRepository noticeRepository;
     private final PostRepository postRepository;
+    private final BoardLikeRepository boardLikeRepository;
 
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
@@ -308,5 +309,10 @@ public class UserService {
             data.add(postListDto);
         }
         return data;
+    }
+
+    public boolean getIsBoardLike(User user, Long boardId) {
+        Optional<BoardLike> boardLike = boardLikeRepository.findBoardLikeByUserAndBoardId(user, boardId);
+        return boardLike.isPresent();
     }
 }
