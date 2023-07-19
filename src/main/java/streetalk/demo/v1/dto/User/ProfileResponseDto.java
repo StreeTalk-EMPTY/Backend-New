@@ -13,7 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ProfileResponseDto {
     private String userName;
-    private String location;
+//    private String location;
     private String industry;
     private String currentCity;
     private List<NearCity> nearCities;
