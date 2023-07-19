@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -245,17 +246,29 @@ public class UserService {
         List<Post> myPostList = postRepository.findByUser(user);
         List<PostListDto> data = new ArrayList<>();
 
-        for (Post post : myPostList) {
+        for (int i=myPostList.size()-1; i>=0; i--) {
+            Post post = myPostList.get(i);
+            Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScarp> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            Boolean like = false;
+            Boolean scrap = false;
+            if(postLike.isPresent())
+                like = true;
+            if(postScarp.isPresent())
+                scrap = true;
             PostListDto postListDto = PostListDto
                     .builder()
-                    .postId(post.getId())
-                    .writer(post.getWriter())
-                    .writerId(user.getId())
                     .title(post.getTitle())
                     .content(post.getContent())
                     .isPrivate(post.getIsPrivate())
-                    .hasAuthority(true)
+                    .postId(post.getId())
+                    .writer(post.getWriter())
                     .createTime(post.getCreatedDate().toLocalDate())
+                    .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
                     .build();
             data.add(postListDto);
         }
