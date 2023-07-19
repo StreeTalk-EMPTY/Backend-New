@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@RestController
+@RestController()
 @RequiredArgsConstructor
 public class UserController {
 
