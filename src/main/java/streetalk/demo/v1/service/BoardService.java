@@ -15,6 +15,7 @@ import streetalk.demo.v1.repository.PostRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,7 +67,20 @@ public class BoardService {
         }catch (Error e){
             throw new ArithmeticException(404, "Error for BoardLike");
         }
-        return;
+    }
+
+    @Transactional
+    public void removeBoardLike(HttpServletRequest req, Long id) {
+        User user = userService.getCurrentUser(req);
+        Board removeBoard = boardRepository.findBoardById(id)
+                .orElseThrow(() -> new ArithmeticException(404, "can't match board"));
+        try {
+            BoardLike boardLike = boardLikeRepository.findBoardLikeByUserAndBoard(user, removeBoard)
+                    .orElseThrow(() -> new ArithmeticException(404, "can't find BoardLike"));
+            boardLikeRepository.delete(boardLike);
+        } catch (Error e) {
+            throw new ArithmeticException(404, "Error for BoardLike");
+        }
     }
 
     @Transactional
