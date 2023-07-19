@@ -23,9 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -45,6 +43,7 @@ public class UserService {
     private final NoticeRepository noticeRepository;
     private final PostRepository postRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final ReplyRepository replyRepository;
 
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
@@ -314,5 +313,44 @@ public class UserService {
     public boolean getIsBoardLike(User user, Long boardId) {
         Optional<BoardLike> boardLike = boardLikeRepository.findBoardLikeByUserAndBoardId(user, boardId);
         return boardLike.isPresent();
+    }
+
+    public List<PostListDto> getPostListMyReply(HttpServletRequest req) {
+        User user = getCurrentUser(req);
+        List<Reply> replyList = replyRepository.findRepliesByUserId(user.getId());
+        List<PostListDto> data = new ArrayList<>();
+        Set<Long> postIdSet = new HashSet<>();
+        for (int i=replyList.size()-1; i>=0; i--) {
+            Reply reply = replyList.get(i);
+            Post post = reply.getPost();
+            if (postIdSet.contains(post.getId())) {
+                continue;
+            }
+            postIdSet.add(post.getId());
+            Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            boolean like = false;
+            boolean scrap = false;
+            if(postLike.isPresent())
+                like = true;
+            if(postScarp.isPresent())
+                scrap = true;
+            PostListDto postListDto = PostListDto
+                    .builder()
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .isPrivate(post.getIsPrivate())
+                    .postId(post.getId())
+                    .writer(post.getWriter())
+                    .createTime(post.getCreatedDate().toLocalDate())
+                    .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
+                    .build();
+            data.add(postListDto);
+        }
+        return data;
     }
 }
