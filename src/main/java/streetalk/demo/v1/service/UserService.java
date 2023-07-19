@@ -187,6 +187,7 @@ public class UserService {
                     .scrapcount(post.getScrapCount())
                     .postLike(like)
                     .postScrap(scrap)
+                    .postId(post.getId())
                     .build();
             postlikeResponseDtos.add(postLikeResponseDto);
         }
@@ -226,6 +227,7 @@ public class UserService {
                     .scrapcount(postScarp.getPost().getScrapCount())
                     .postLike(like)
                     .postScrap(scrap)
+                    .postId(post.getId())
                     .build();
             scraplikeResponseDtos.add(scrapLikeResponseDto);
         }

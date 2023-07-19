@@ -9,6 +9,7 @@ import streetalk.demo.v1.domain.Location;
 @NoArgsConstructor
 @Builder
 public class PostLikeResponseDto {
+    private Long postId;
     private String name;
     private Location location;
     private String title;
