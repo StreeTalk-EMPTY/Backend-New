@@ -375,4 +375,10 @@ public class UserService {
                 .build();
         return profileResponseDto;
     }
+
+    public void deleteUser(HttpServletRequest req) {
+        User user = getCurrentUser(req);
+        user.setPhoneNum(user.getPhoneNum()+"D");
+        userRepository.saveAndFlush(user);
+    }
 }
