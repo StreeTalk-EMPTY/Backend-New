@@ -48,6 +48,9 @@ public class UserService {
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
         // 1. check if phoneNum user exists -> if not { sign up }
+
+        // TODO
+        //  회원가입 로직 변겅 필요
         User user = userRepository.findByPhoneNum(phoneNum)
                 .orElseGet(() -> signUp(phoneNum));
 
@@ -73,12 +76,12 @@ public class UserService {
     @Transactional
     public User signUp(String phoneNum) {
         User user = User.builder()
-                .name("거리지기")
+                .name("new user")
                 .phoneNum(phoneNum)
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
-        user.setName("거리지기 " + user.getId());
+//        user.setName("거리지기 " + user.getId());
         return user;
     }
 
@@ -94,12 +97,13 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = doGenerateToken(authentication);
-        String userName = null;
-        if (user.getName() == null) {
+        String userName = user.getName();
+//        String userName = null;
+//        if (user.getName() == null) {
 //            userName = "거리지기 " + Long.valueOf(userRepository.findAll().size());
-            userName = "new user";
-        } else
-            userName = user.getName();
+//            userName = "new user";
+//        } else
+//            userName = user.getName();
         Location currentLocation = locationService.getKoLocation(loginRequestDto.getLongitude(), loginRequestDto.getLatitude());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto(
