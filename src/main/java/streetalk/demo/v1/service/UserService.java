@@ -96,7 +96,8 @@ public class UserService {
         String token = doGenerateToken(authentication);
         String userName = null;
         if (user.getName() == null) {
-            userName = "거리지기 " + Long.valueOf(userRepository.findAll().size());
+//            userName = "거리지기 " + Long.valueOf(userRepository.findAll().size());
+            userName = "new user";
         } else
             userName = user.getName();
         Location currentLocation = locationService.getKoLocation(loginRequestDto.getLongitude(), loginRequestDto.getLatitude());
