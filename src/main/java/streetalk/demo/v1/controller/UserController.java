@@ -88,13 +88,13 @@ public class UserController {
 
     @GetMapping("/user/postLikes")
     public ResponseEntity<MessageWithData> getUserPostLike(HttpServletRequest req){
-        List<PostLikeResponseDto> data=userService.getUserPostLike(req);
+        List<PostListDto> data=userService.getUserPostLike(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "getUserPostLike success!", data), HttpStatus.OK);
     }
 
     @GetMapping("/user/postScraps")
     public ResponseEntity<MessageWithData> getUserScrapLike(HttpServletRequest req){
-        List<ScrapLikeResponseDto> data=userService.getUserScrapLike(req);
+        List<PostListDto> data=userService.getUserScrapLike(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "getUserScrapLike success!", data), HttpStatus.OK);
     }
 
