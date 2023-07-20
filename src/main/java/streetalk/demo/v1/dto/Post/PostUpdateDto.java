@@ -15,5 +15,5 @@ public class PostUpdateDto {
     private Long postId;
     private String title;
     private String content;
-//    private List<MultipartFile> multipartFiles;
+    private List<MultipartFile> multipartFiles;
 }
