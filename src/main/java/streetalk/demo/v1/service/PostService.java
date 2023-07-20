@@ -160,12 +160,14 @@ public class PostService {
     @Transactional
     public void update(HttpServletRequest req, @ModelAttribute PostUpdateDto postUpdateDto) throws IOException {
         User user = userService.getCurrentUser(req);
+        System.out.println(user.getId());
+        System.out.println(postUpdateDto);
         Post post = postRepository.findById(postUpdateDto.getPostId())
                 .orElseThrow(()->new ArithmeticException(404,"Doesn't Exist post"));
         //post가 해당 유저의 것인지 확인
         if(post.getUser().equals(user)){
             post.update(postUpdateDto.getTitle(), postUpdateDto.getContent());
-            post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+//            post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
         }else{
             throw new ArithmeticException(404, "해당 유저의 글이 아닙니다.");
         }
