@@ -169,7 +169,6 @@ public class PostService {
         }else{
             throw new ArithmeticException(404, "해당 유저의 글이 아닙니다.");
         }
-        return;
     }
 
     //post 좋아요

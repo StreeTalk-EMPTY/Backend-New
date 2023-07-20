@@ -8,6 +8,7 @@ import streetalk.demo.v1.dto.MessageOnly;
 import streetalk.demo.v1.dto.MessageWithData;
 import streetalk.demo.v1.dto.Post.LockReplyDto;
 import streetalk.demo.v1.dto.Post.ReplyDto;
+import streetalk.demo.v1.dto.Post.ReplyRequestDto;
 import streetalk.demo.v1.service.ReplyService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +22,14 @@ public class ReplyController {
 
     @PostMapping("/reply")
     public ResponseEntity<MessageOnly> save(HttpServletRequest req, @RequestBody ReplyDto replyDto){
-        System.out.println("start");
         replyService.saveReply(req, replyDto);
         return new ResponseEntity<>(new MessageOnly(200, true, "Reply Save Success"), HttpStatus.OK);
+    }
+
+    @PutMapping("/reply")
+    public ResponseEntity<MessageOnly> update(HttpServletRequest req, @RequestBody ReplyRequestDto replyDto) {
+        replyService.updateReply(req, replyDto);
+        return new ResponseEntity<>(new MessageOnly(200, true, "Reply Update Success"), HttpStatus.OK);
     }
 
     @DeleteMapping("/reply/{replyId}")

@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
-import streetalk.demo.v1.dto.Post.LockReplyDto;
-import streetalk.demo.v1.dto.Post.ReplyDto;
-import streetalk.demo.v1.dto.Post.ReplyNameDto;
-import streetalk.demo.v1.dto.Post.ReplyResponseDto;
+import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.enums.Role;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.repository.*;
@@ -145,6 +142,17 @@ public class ReplyService {
                 reply.setBlocked(Boolean.TRUE);
             }
             return true;
+        }
+    }
+
+    public void updateReply(HttpServletRequest req, ReplyRequestDto replyDto) {
+        User user = userService.getCurrentUser(req);
+        Reply reply = replyRepository.findById(replyDto.getReplyId())
+                .orElseThrow(() -> new ArithmeticException(404, "can't find reply"));
+        if (reply.getUser().equals(user)) {
+            reply.update(replyDto.getContent());
+        } else {
+            throw new ArithmeticException(404, "you are not reply writer");
         }
     }
 }
