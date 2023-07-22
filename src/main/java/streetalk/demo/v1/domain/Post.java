@@ -45,6 +45,11 @@ public class Post extends BaseTimeEntity{
     @Column
     @Builder.Default
     private Boolean isPrivate = false;
+
+    @Column
+    @Builder.Default
+    private Boolean isDeleted = false;
+
     public void reportCountUp(){
         this.reportCount++;
     }
@@ -100,5 +105,8 @@ public class Post extends BaseTimeEntity{
     }
     public void scrapUpdate(Long num){
         this.scrapCount=num;
+    }
+    public void postDelete() {
+        this.isDeleted = true;
     }
 }

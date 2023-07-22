@@ -92,7 +92,7 @@ public class PostService {
 
     //주어진 postId 로부터 항상 0번째 페이지 가져옴
     @Transactional
-    public List<PostListDto> getPostListByPage(Long boardId, Long postId){
+    public List<PostListDto> getPostListByPage(Long boardId, Long postId, HttpServletRequest req){
         Board board = boardRepository.findBoardById(boardId)
                 .orElseThrow(()->new ArithmeticException(404,"can't find board"));
         PageRequest pageRequest = PageRequest.of(0, POSTSIZE, Sort.by(Sort.Direction.DESC, "createdDate"));
@@ -100,12 +100,16 @@ public class PostService {
             postId = postRepository.findFirstByOrderByCreatedDateDesc().getId();
             ++postId;
         }
-        Slice<Post> posts = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
-        return posts.getContent()
-                .stream()
-                .map(post -> new PostListDto(post))
-                .sorted(Comparator.comparing(PostListDto::getPostId).reversed())
-                .collect(Collectors.toList());
+        List<Post> postList = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
+        User currentUser = userService.getCurrentUser(req);
+        return toPostListDto(postList, currentUser);
+
+//        Slice<Post> posts = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
+//        return posts.getContent()
+//                .stream()
+//                .map(post -> new PostListDto(post))
+//                .sorted(Comparator.comparing(PostListDto::getPostId).reversed())
+//                .collect(Collectors.toList());
     }
 
     //post 하나 가져오기
@@ -125,7 +129,7 @@ public class PostService {
         try{
             return PostResponseDto.builder()
                     .boardName(post.getBoard().getBoardName())
-                    .postWriterName(post.getWriter())
+                    .postWriterName(post.getUser().getName())
                     .postWriterId(post.getUser().getId())
                     .location(user.getLocation().getSmallLocation())
                     .industry(user.getIndustry().getName())
@@ -307,7 +311,7 @@ public class PostService {
                     .content(post.getContent())
                     .isPrivate(post.getIsPrivate())
                     .postId(post.getId())
-                    .writer(post.getWriter())
+                    .writer(post.getUser().getName())
                     .createTime(post.getCreatedDate().toLocalDate())
                     .postScrap(scrap)
                     .postLike(like)
@@ -319,4 +323,6 @@ public class PostService {
         }
         return data;
     }
+
+
 }

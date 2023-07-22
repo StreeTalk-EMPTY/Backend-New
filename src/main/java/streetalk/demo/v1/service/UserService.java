@@ -379,6 +379,12 @@ public class UserService {
     public void deleteUser(HttpServletRequest req) {
         User user = getCurrentUser(req);
         user.setPhoneNum(user.getPhoneNum()+"D");
+        user.setName("탈퇴회원");
         userRepository.saveAndFlush(user);
+    }
+
+    public User findUserNameByUserId(Long userId) {
+        return userRepository.findUserById(userId)
+                .orElseThrow(() -> new ArithmeticException(404, "can't find user"));
     }
 }

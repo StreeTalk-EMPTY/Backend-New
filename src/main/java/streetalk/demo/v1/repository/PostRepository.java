@@ -23,7 +23,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findPostsByBoardAndIndustryAndLocation(Board board, Industry industry, Location location);
 
-    Page<Post> findByIdLessThanAndBoard(Long postId, Board board, Pageable pageable);
+//    Page<Post> findByIdLessThanAndBoard(Long postId, Board board, Pageable pageable);
+
+    List<Post> findByIdLessThanAndBoard(Long postId, Board board, Pageable pageable);
 
     List<Post> findByCreatedDateAfterAndIndustry(LocalDateTime localDateTime, Industry industry);
     List<Post> findByCreatedDateAfterAndLocation(LocalDateTime localDateTime, Location location);
