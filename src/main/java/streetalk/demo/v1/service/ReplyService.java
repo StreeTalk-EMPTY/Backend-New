@@ -107,7 +107,7 @@ public class ReplyService {
     public ReplyResponseDto getReplyToDto(Reply reply, User user){
         return ReplyResponseDto.builder()
                 .replyId(reply.getId())
-                .replyWriterName(reply.getWriter())
+                .replyWriterName(reply.getUser().getName())
                 .location(reply.getLocation())
                 .content(reply.getContent())
                 .replyWriterId(reply.getUser().getId())
