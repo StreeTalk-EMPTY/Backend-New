@@ -63,13 +63,13 @@ paging의 정식 방법
 
     @GetMapping(value={"/post/list/{boardId}/{postId}", "/post/list/{boardId}"})
     public ResponseEntity<MessageWithData> getPostList(@PathVariable Long boardId, @PathVariable(required = false) Long postId, HttpServletRequest req){
-        List<PostListDto> postListDtoList = postService.getPostListByPage(boardId, postId);
+        List<PostListDto> postListDtoList = postService.getPostListByPage(boardId, postId, req);
         User user = userService.getCurrentUser(req);
 
-        for (PostListDto postListDto : postListDtoList) {
+//        for (PostListDto postListDto : postListDtoList) {
             // Auth 확인 필요 -> writer 대신 writerId로 변경 필요
-            postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriterId()));
-        }
+//            postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriterId()));
+//        }
         BoardResponseDto data = BoardResponseDto
                 .builder()
                 .isBoardLike(userService.getIsBoardLike(user, boardId))

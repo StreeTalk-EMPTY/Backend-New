@@ -382,4 +382,9 @@ public class UserService {
         user.setName("탈퇴회원");
         userRepository.saveAndFlush(user);
     }
+
+    public User findUserNameByUserId(Long userId) {
+        return userRepository.findUserById(userId)
+                .orElseThrow(() -> new ArithmeticException(404, "can't find user"));
+    }
 }
