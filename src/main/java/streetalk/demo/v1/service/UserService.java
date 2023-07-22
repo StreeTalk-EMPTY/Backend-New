@@ -379,6 +379,7 @@ public class UserService {
     public void deleteUser(HttpServletRequest req) {
         User user = getCurrentUser(req);
         user.setPhoneNum(user.getPhoneNum()+"D");
+        user.setName("탈퇴회원");
         userRepository.saveAndFlush(user);
     }
 }

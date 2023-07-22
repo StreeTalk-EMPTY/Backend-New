@@ -125,7 +125,7 @@ public class PostService {
         try{
             return PostResponseDto.builder()
                     .boardName(post.getBoard().getBoardName())
-                    .postWriterName(post.getWriter())
+                    .postWriterName(post.getUser().getName())
                     .postWriterId(post.getUser().getId())
                     .location(user.getLocation().getSmallLocation())
                     .industry(user.getIndustry().getName())
