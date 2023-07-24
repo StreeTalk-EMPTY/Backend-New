@@ -176,9 +176,11 @@ public class PostService {
         System.out.println(postUpdateDto);
         Post post = postRepository.findById(postUpdateDto.getPostId())
                 .orElseThrow(()->new ArithmeticException(404,"Doesn't Exist post"));
+
         //post가 해당 유저의 것인지 확인
         if(post.getUser().equals(user)){
             post.update(postUpdateDto.getTitle(), postUpdateDto.getContent());
+            // 이미지 포함 전송온 경우
             if (postUpdateDto.getMultipartFiles() != null) {
 //                post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
                 for (MultipartFile multipartFile : postUpdateDto.getMultipartFiles()) {
@@ -189,6 +191,7 @@ public class PostService {
                     postImagesRepository.save(postImages);
                 }
             }
+            // 이미지 없이 온 경우
             else {
 //                List<PostImages> clearImage = new ArrayList<>();
 //                post.setImages(clearImage);
