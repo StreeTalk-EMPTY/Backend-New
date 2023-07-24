@@ -64,6 +64,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public ResponseEntity<MessageWithData> login(@RequestBody LoginRequestDto loginRequestDto) {
+        System.out.println(loginRequestDto);
         LoginResponseDto data = userService.login(loginRequestDto);
         return new ResponseEntity<>(new MessageWithData(200, true, "auth Success", data), HttpStatus.OK);
     }

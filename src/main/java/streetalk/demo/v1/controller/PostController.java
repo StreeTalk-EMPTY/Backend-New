@@ -97,7 +97,7 @@ paging의 정식 방법
     }
 
     @GetMapping("/searchPost/{word}")
-    public ResponseEntity<MessageWithData>postSearch(HttpServletRequest req, @PathVariable("word") String key){
+    public ResponseEntity<MessageWithData> postSearch(HttpServletRequest req, @PathVariable("word") String key){
         List<Post> postList = postService.searchPost(req,key);
         List<PostListDto> data = postService.toPostListDto(postList, userService.getCurrentUser(req));
         return new ResponseEntity<>(new MessageWithData(200, true, "search Post Success", data), HttpStatus.OK);
