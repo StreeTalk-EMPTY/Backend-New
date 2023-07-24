@@ -5,6 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.multipart.MultipartFile;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.enums.Role;
@@ -34,6 +35,7 @@ public class PostService {
     private final PostScrapRepository postScrapRepository;
     private final ReplyService replyService;
     private final LockPostRepository lockPostRepository;
+    private final PostImagesRepository postImagesRepository;
     //post 저장
     @Transactional
     public void save(HttpServletRequest req, PostDto postDto){
@@ -177,7 +179,23 @@ public class PostService {
         //post가 해당 유저의 것인지 확인
         if(post.getUser().equals(user)){
             post.update(postUpdateDto.getTitle(), postUpdateDto.getContent());
-            post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+            if (postUpdateDto.getMultipartFiles() != null) {
+//                post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+                for (MultipartFile multipartFile : postUpdateDto.getMultipartFiles()) {
+                    PostImages postImages = PostImages.builder()
+                            .name(multipartFile.getName())
+                            .post(post)
+                            .build();
+                    postImagesRepository.save(postImages);
+                }
+            }
+            else {
+//                List<PostImages> clearImage = new ArrayList<>();
+//                post.setImages(clearImage);
+//                postRepository.saveAndFlush(post);
+                postImagesRepository.deleteAllByPostId(post.getId());
+//                System.out.println(post.getImages());
+            }
         }else{
             throw new ArithmeticException(404, "해당 유저의 글이 아닙니다.");
         }
