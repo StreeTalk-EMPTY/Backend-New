@@ -30,7 +30,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final PostImageService postImageService;
     private final String PREFIX = "거리지기 ";
-    private final int POSTSIZE = 5;
+    private final int POSTSIZE = 10;
     private final PostScrapRepository postScrapRepository;
     private final ReplyService replyService;
     private final LockPostRepository lockPostRepository;
@@ -98,11 +98,13 @@ public class PostService {
                 .orElseThrow(()->new ArithmeticException(404,"can't find board"));
         PageRequest pageRequest = PageRequest.of(0, POSTSIZE, Sort.by(Sort.Direction.DESC, "createdDate"));
         if(postId == null){
-            postId = postRepository.findFirstByOrderByCreatedDateDesc().getId();
-            ++postId;
+            postId = postRepository.findFirstByOrderByCreatedDateDesc().getId() + 1;
+//            ++postId;
         }
-        List<Post> postList = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
+//        List<Post> postList = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
+        List<Post> postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
         User currentUser = userService.getCurrentUser(req);
+
         return toPostListDto(postList, currentUser);
 
 //        Slice<Post> posts = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
@@ -330,6 +332,7 @@ public class PostService {
                     .build();
             data.add(postListDto);
         }
+        data.sort(Comparator.comparing(PostListDto::getCreateTime).reversed());
         return data;
     }
 
