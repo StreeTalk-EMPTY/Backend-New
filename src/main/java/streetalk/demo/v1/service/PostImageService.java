@@ -41,7 +41,7 @@ public class PostImageService {
     }
 
     @Transactional
-    public List<String>  getPostImagesUrl(Post post){
+    public List<String> getPostImagesUrl(Post post){
         return post.getImages().stream()
                 .map(image -> s3Service.getPreSignedDownloadUrl(image.getName()))
                 .collect(toList());
