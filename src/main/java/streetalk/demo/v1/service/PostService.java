@@ -5,6 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.multipart.MultipartFile;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.enums.Role;
@@ -34,6 +35,7 @@ public class PostService {
     private final PostScrapRepository postScrapRepository;
     private final ReplyService replyService;
     private final LockPostRepository lockPostRepository;
+    private final PostImagesRepository postImagesRepository;
     //post 저장
     @Transactional
     public void save(HttpServletRequest req, PostDto postDto){
@@ -174,10 +176,28 @@ public class PostService {
         System.out.println(postUpdateDto);
         Post post = postRepository.findById(postUpdateDto.getPostId())
                 .orElseThrow(()->new ArithmeticException(404,"Doesn't Exist post"));
+
         //post가 해당 유저의 것인지 확인
         if(post.getUser().equals(user)){
             post.update(postUpdateDto.getTitle(), postUpdateDto.getContent());
-//            post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+          
+            // 이미지 포함 전송온 경우
+            if (postUpdateDto.getMultipartFiles() != null) {
+//                post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+                for (MultipartFile multipartFile : postUpdateDto.getMultipartFiles()) {
+                    PostImages postImages = PostImages.builder()
+                            .name(multipartFile.getName())
+                            .post(post)
+                            .build();
+                    postImagesRepository.save(postImages);
+                }
+            }
+          
+            // 이미지 없이 온 경우
+            else {
+                postImagesRepository.deleteAllByPostId(post.getId());
+            }
+
         }else{
             throw new ArithmeticException(404, "해당 유저의 글이 아닙니다.");
         }
