@@ -117,8 +117,11 @@ public class PostService {
     @Transactional
     public PostResponseDto findPostById(HttpServletRequest req,Long postId){
         User user = userService.getCurrentUser(req);
-        Post post=postRepository.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(()->new ArithmeticException(404,"해당 게시물이 없습니다."));
+        if (post.getIsDeleted()) {
+            throw new ArithmeticException(404, "삭제된 글입니다");
+        }
         Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
         Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post,user);
         Boolean like = false;
@@ -252,7 +255,9 @@ public class PostService {
         else{
             try{
                 deleteLockPost(post);
-                postRepository.delete(post);
+                post.postDelete();
+                postRepository.save(post);
+//                postRepository.delete(post);
             }catch (Error e){
                 System.out.println(e);
                 throw new ArithmeticException(404, "fail deleting post");
@@ -298,6 +303,9 @@ public class PostService {
     public List<PostListDto> toPostListDto(List<Post> postList, User user) {
         List<PostListDto> data = new ArrayList<>();
         for (Post post : postList) {
+            if (post.getIsDeleted()) {
+                continue;
+            }
             Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
             Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
             Boolean like = false;
