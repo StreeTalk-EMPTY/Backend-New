@@ -7,4 +7,5 @@ public interface PostImagesRepository extends JpaRepository<PostImages, Long> {
 
     void deleteAllByPostId(Long postId);
 
+
 }
