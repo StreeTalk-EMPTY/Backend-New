@@ -303,9 +303,9 @@ public class PostService {
     public List<PostListDto> toPostListDto(List<Post> postList, User user) {
         List<PostListDto> data = new ArrayList<>();
         for (Post post : postList) {
-//            if (post.getIsDeleted()) {
-//                continue;
-//            }
+            if (post.getIsDeleted()) {
+                continue;
+            }
             Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
             Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
             Boolean like = false;
