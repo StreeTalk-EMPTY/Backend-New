@@ -332,6 +332,7 @@ public class PostService {
                     .build();
             data.add(postListDto);
         }
+        data.sort(Comparator.comparing(PostListDto::getCreateTime).reversed());
         return data;
     }
 
