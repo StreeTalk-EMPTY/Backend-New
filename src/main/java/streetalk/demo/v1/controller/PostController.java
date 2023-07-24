@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import streetalk.demo.v1.domain.Board;
 import streetalk.demo.v1.domain.Post;
 import streetalk.demo.v1.domain.User;
+import streetalk.demo.v1.dto.Home.HomeDto;
 import streetalk.demo.v1.dto.MessageOnly;
 import streetalk.demo.v1.dto.MessageWithData;
 import streetalk.demo.v1.dto.Post.*;
 import streetalk.demo.v1.service.BoardService;
+import streetalk.demo.v1.service.HomeService;
 import streetalk.demo.v1.service.PostService;
 import streetalk.demo.v1.service.UserService;
 
@@ -28,6 +30,15 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final BoardService boardService;
+
+    private final HomeService homeService;
+
+    @GetMapping("/home")
+    public ResponseEntity<MessageWithData>getHome(HttpServletRequest req){
+        HomeDto data = homeService.getHome(req);
+        return new ResponseEntity<>(new MessageWithData(200, true, "Get home Success", data), HttpStatus.OK);
+    }
+
     @PostMapping("/test/post")
     public String testPost(HttpServletRequest req, @ModelAttribute PostDto postDto) {
         postService.save(req, postDto);
