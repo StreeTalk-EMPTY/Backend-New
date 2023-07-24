@@ -288,29 +288,31 @@ public class UserService {
 
         for (int i=myPostList.size()-1; i>=0; i--) {
             Post post = myPostList.get(i);
-            Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-            Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
-            boolean like = false;
-            boolean scrap = false;
-            if(postLike.isPresent())
-                like = true;
-            if(postScarp.isPresent())
-                scrap = true;
-            PostListDto postListDto = PostListDto
-                    .builder()
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .isPrivate(post.getIsPrivate())
-                    .postId(post.getId())
-                    .writer(post.getUser().getName())
-                    .createTime(post.getCreatedDate().toLocalDate())
-                    .postScrap(scrap)
-                    .postLike(like)
-                    .scrapCount(post.getScrapCount())
-                    .likeCount(post.getLikeCount())
-                    .replyCount(post.getReplyCount())
-                    .build();
-            data.add(postListDto);
+            if (!post.getIsDeleted()) {
+                Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+                Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
+                boolean like = false;
+                boolean scrap = false;
+                if(postLike.isPresent())
+                    like = true;
+                if(postScarp.isPresent())
+                    scrap = true;
+                PostListDto postListDto = PostListDto
+                        .builder()
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .isPrivate(post.getIsPrivate())
+                        .postId(post.getId())
+                        .writer(post.getUser().getName())
+                        .createTime(post.getCreatedDate().toLocalDate())
+                        .postScrap(scrap)
+                        .postLike(like)
+                        .scrapCount(post.getScrapCount())
+                        .likeCount(post.getLikeCount())
+                        .replyCount(post.getReplyCount())
+                        .build();
+                data.add(postListDto);
+            }
         }
         return data;
     }
