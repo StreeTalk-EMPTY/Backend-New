@@ -173,6 +173,10 @@ public class UserService {
             PostLike postLike = postLikeList.get(i);
             Post post = postLike.getPost();
 
+            if (post.getIsDeleted()) {
+                continue;
+            }
+
             // TODO
             //  따로 서비스로 뺄 것
             Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
@@ -215,6 +219,9 @@ public class UserService {
         for (int i = postScrapList.size()-1; i>=0; i--) {
             PostScrap postScrap = postScrapList.get(i);
             Post post = postScrap.getPost();
+            if (post.getIsDeleted()) {
+                continue;
+            }
             // TODO
             //  따로 서비스로 뺄 것
             Optional<PostLike> isPostLike = postLikeRepository.findByPostAndUser(post, user);
@@ -288,31 +295,32 @@ public class UserService {
 
         for (int i=myPostList.size()-1; i>=0; i--) {
             Post post = myPostList.get(i);
-            if (!post.getIsDeleted()) {
-                Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-                Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
-                boolean like = false;
-                boolean scrap = false;
-                if(postLike.isPresent())
-                    like = true;
-                if(postScarp.isPresent())
-                    scrap = true;
-                PostListDto postListDto = PostListDto
-                        .builder()
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .isPrivate(post.getIsPrivate())
-                        .postId(post.getId())
-                        .writer(post.getUser().getName())
-                        .createTime(post.getCreatedDate().toLocalDate())
-                        .postScrap(scrap)
-                        .postLike(like)
-                        .scrapCount(post.getScrapCount())
-                        .likeCount(post.getLikeCount())
-                        .replyCount(post.getReplyCount())
-                        .build();
-                data.add(postListDto);
+            if (post.getIsDeleted()) {
+                continue;
             }
+            Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
+            Optional<PostScrap> postScarp = postScrapRepository.findByPostAndUser(post, user);
+            boolean like = false;
+            boolean scrap = false;
+            if(postLike.isPresent())
+                like = true;
+            if(postScarp.isPresent())
+                scrap = true;
+            PostListDto postListDto = PostListDto
+                    .builder()
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .isPrivate(post.getIsPrivate())
+                    .postId(post.getId())
+                    .writer(post.getUser().getName())
+                    .createTime(post.getCreatedDate().toLocalDate())
+                    .postScrap(scrap)
+                    .postLike(like)
+                    .scrapCount(post.getScrapCount())
+                    .likeCount(post.getLikeCount())
+                    .replyCount(post.getReplyCount())
+                    .build();
+            data.add(postListDto);
         }
         return data;
     }
@@ -330,6 +338,9 @@ public class UserService {
         for (int i=replyList.size()-1; i>=0; i--) {
             Reply reply = replyList.get(i);
             Post post = reply.getPost();
+            if (post.getIsDeleted()) {
+                continue;
+            }
             if (postIdSet.contains(post.getId())) {
                 continue;
             }
