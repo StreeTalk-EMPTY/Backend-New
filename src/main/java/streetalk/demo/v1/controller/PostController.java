@@ -79,7 +79,7 @@ paging의 정식 방법
     }
 
     @PutMapping("/post")
-    public ResponseEntity<MessageOnly> update(HttpServletRequest req, @ModelAttribute PostUpdateDto postUpdateDto) throws IOException {
+    public ResponseEntity<MessageOnly> update(HttpServletRequest req, @RequestBody PostUpdateDto postUpdateDto) throws IOException {
         postService.update(req,postUpdateDto);
         return new ResponseEntity<>(new MessageOnly(200,true,"post Update Success"),HttpStatus.OK);
     }
