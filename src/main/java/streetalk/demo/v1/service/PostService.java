@@ -35,7 +35,7 @@ public class PostService {
     private final PostScrapRepository postScrapRepository;
     private final ReplyService replyService;
     private final LockPostRepository lockPostRepository;
-//    private final PostImagesRepository postImagesRepository;
+    private final PostImagesRepository postImagesRepository;
     //post 저장
     @Transactional
     public void save(HttpServletRequest req, PostDto postDto){
@@ -183,20 +183,20 @@ public class PostService {
           
             // 이미지 포함 전송온 경우
             if (postUpdateDto.getMultipartFiles() != null) {
-                post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
-//                for (MultipartFile multipartFile : postUpdateDto.getMultipartFiles()) {
-//                    PostImages postImages = PostImages.builder()
-//                            .name(multipartFile.getName())
-//                            .post(post)
-//                            .build();
-//                    postImagesRepository.save(postImages);
-//                }
+//                post.setImages(postImageService.setPostImages(user.getId(), post, postUpdateDto.getMultipartFiles()));
+                for (MultipartFile multipartFile : postUpdateDto.getMultipartFiles()) {
+                    PostImages postImages = PostImages.builder()
+                            .name(multipartFile.getName())
+                            .post(post)
+                            .build();
+                    postImagesRepository.save(postImages);
+                }
             }
           
             // 이미지 없이 온 경우
-//            else {
-//                postImagesRepository.deleteAllByPostId(post.getId());
-//            }
+            else {
+                postImagesRepository.deleteAllByPostId(post.getId());
+            }
 
         }else{
             throw new ArithmeticException(404, "해당 유저의 글이 아닙니다.");
