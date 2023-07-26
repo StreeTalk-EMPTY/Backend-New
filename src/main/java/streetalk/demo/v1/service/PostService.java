@@ -101,9 +101,10 @@ public class PostService {
         PageRequest pageRequest = PageRequest.of(0, POSTSIZE, Sort.by(Sort.Direction.DESC, "createdDate"));
         if(postId == null){
             postId = postRepository.findFirstByOrderByCreatedDateDesc().getId() + 1;
-//            ++postId;
         }
-//        List<Post> postList = postRepository.findByIdLessThanAndBoard(postId, board, pageRequest);
+
+
+
         List<Post> postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
         User currentUser = userService.getCurrentUser(req);
 
@@ -319,7 +320,19 @@ public class PostService {
     public Boolean hasAuthority(User user, Long id) {
         return Objects.equals(user.getId(), id) || user.getRole() == Role.ADMIN;
     }
-
+//
+//    public List<PostListDto> findIndustryPostList() {
+//        return null;
+//    }
+//
+//    public List<PostListDto> findLocationPostList() {
+//        return null;
+//    }
+//
+//    public List<PostListDto> findHotPostList() {;
+//        return null;
+//    }
+//
     // TODO
     //  postListDto에 넣어서 사용할 것
     public List<PostListDto> toPostListDto(List<Post> postList, User user) {

@@ -80,12 +80,13 @@ public class HomeService {
 
     @Transactional
     public List<HomePostListDto> getLocalPosts(Location location){
-        List<Post> posts = postRepository.findByIsDeletedIsFalseAndCreatedDateAfterAndLocation(LocalDateTime.now().minusDays(7), location)
-                .stream()
+        List<Post> posts = postRepository.findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(location, LocalDateTime.now().minusDays(7));
+//        List<Post> posts = postRepository.findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndLocationOrderByLikeCountDesc(LocalDateTime.now().minusDays(7), location);
+//                .stream()
 //                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
-                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
-                .limit(5)
-                .collect(Collectors.toList());
+//                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
+//                .limit(5)
+//                .collect(Collectors.toList());
         return posts.stream()
                 .map(post -> new HomePostListDto(post))
                 .collect(Collectors.toList());
@@ -93,12 +94,13 @@ public class HomeService {
 
     @Transactional
     public List<HomePostListDto> getIndustryPosts(Industry industry){
-        List<Post> posts = postRepository.findByIsDeletedIsFalseAndCreatedDateAfterAndIndustry(LocalDateTime.now().minusDays(7), industry)
-                .stream()
+        List<Post> posts = postRepository.findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(industry, LocalDateTime.now().minusDays(7));
+//        List<Post> posts = postRepository.findTop5ByIsDeletedFalseAndCreatedDateAfterAndIndustryOrderByLikeCountDesc(LocalDateTime.now().minusDays(7), industry);
+//                .stream()
 //                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
-                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
-                .limit(5)
-                .collect(Collectors.toList());
+//                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
+//                .limit(5)
+//                .collect(Collectors.toList());
         return posts.stream()
                 .map(post -> new HomePostListDto(post))
                 .collect(Collectors.toList());
@@ -106,7 +108,8 @@ public class HomeService {
 
     @Transactional
     public List<HomePostListDto> getNewPosts(){
-        List<Post> posts = postRepository.findTop5AndIsDeletedIsFalseByOrderByCreatedDateDesc();
+        List<Post> posts = postRepository
+                .findTop5ByIsDeletedFalseOrderByCreatedDateDesc();
         return posts.stream()
                 .map(post -> new HomePostListDto(post))
                 .collect(Collectors.toList());
