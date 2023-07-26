@@ -279,6 +279,7 @@ public class UserService {
         List<NoticeResponseDto> noticeResponseDtoList = new ArrayList<>();
         for (Notice notice : noticeList) {
             NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
+                    .id(notice.getId())
                     .title(notice.getTitle())
                     .content(notice.getContent())
                     .createDate(notice.getCreatedDate().toLocalDate())

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class NoticeResponseDto {
 
+    private Long id;
     private String title;
     private String content;
     private LocalDate createDate;
