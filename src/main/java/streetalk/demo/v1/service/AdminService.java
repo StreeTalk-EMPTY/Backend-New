@@ -1,15 +1,12 @@
 package streetalk.demo.v1.service;
 
-import jdk.jfr.StackTrace;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.exception.ArithmeticException;
 import streetalk.demo.v1.repository.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +21,7 @@ public class AdminService {
     private final BoardRepository boardRepository;
     private final NoticeRepository noticeRepository;
     private final S3Service s3Service;
-    private final NoticeImgUrlRepository noticeImgUrlRepository;
+    private final BannerRepository bannerRepository;
 
 
     @Transactional
@@ -83,15 +80,15 @@ public class AdminService {
                         .build());
     }
 
-    @Transactional
-    public void inputNoticeImg(List<MultipartFile> multipartFiles) throws IOException {
-        for (MultipartFile multipartFile : multipartFiles) {
-            String fileName = multipartFile.getOriginalFilename();
-            s3Service.upload("notice1", multipartFile);
-            noticeImgUrlRepository.save(NoticeImgUrl.builder()
-                            .fileName("notice1")
-                            .build());
-        }
-    }
+//    @Transactional
+//    public void inputNoticeImg(List<MultipartFile> multipartFiles) throws IOException {
+//        for (MultipartFile multipartFile : multipartFiles) {
+//            String fileName = multipartFile.getOriginalFilename();
+//            s3Service.upload("notice1", multipartFile);
+//            bannerImgUrlRepository.save(Banner.builder()
+//                            .fileName("notice1")
+//                            .build());
+//        }
+//    }
 
 }

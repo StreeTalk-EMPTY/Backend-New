@@ -1,24 +1,21 @@
 package streetalk.demo.v1.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
 import streetalk.demo.v1.dto.Home.HomeDto;
 import streetalk.demo.v1.dto.Home.HomePostListDto;
 import streetalk.demo.v1.dto.Home.LikeBoard;
+import streetalk.demo.v1.dto.Post.BannerResponseDto;
 import streetalk.demo.v1.dto.Post.PostListDto;
-import streetalk.demo.v1.exception.ArithmeticException;
-import streetalk.demo.v1.repository.BoardRepository;
-import streetalk.demo.v1.repository.NoticeImgUrlRepository;
+import streetalk.demo.v1.repository.BannerRepository;
 import streetalk.demo.v1.repository.NoticeRepository;
 import streetalk.demo.v1.repository.PostRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
 public class HomeService {
     private final UserService userService;
     private final S3Service s3Service;
-    private final NoticeImgUrlRepository noticeImgUrlRepository;
+    private final BannerRepository bannerRepository;
     private final NoticeRepository noticeRepository;
     private final PostRepository postRepository;
 
@@ -43,13 +40,27 @@ public class HomeService {
         List<LikeBoard> likeBoardList = user.getBoardLikes().stream()
                 .map(boardLike ->  new LikeBoard(boardLike.getBoard().getBoardName(), boardLike.getBoard().getId()) )
                 .collect(Collectors.toList());
+        List<Banner> bannerList = bannerRepository.findAll();
+        List<BannerResponseDto> bannerResponseDtoList = new ArrayList<>();
 
+        for (Banner banner : bannerList) {
+            BannerResponseDto bannerResponseDto = BannerResponseDto
+                    .builder()
+                    .title(banner.getTitle())
+                    .content(banner.getContent())
+                    .contentId(banner.getContentId())
+                    .isNotice(banner.isNotice())
+                    .build();
+            bannerResponseDtoList.add(bannerResponseDto);
+        }
+        bannerResponseDtoList.sort(Comparator.comparing(BannerResponseDto::getContentId).reversed());
 
         return HomeDto.builder()
                 .userName(user.getName())
                 .location(user.getLocation().getSmallLocation())
                 .industry(user.getIndustry().getName())
-                .mainNoticeImgUrl(getNoticeUrl())
+//                .mainNoticeImgUrl(getNoticeUrl())
+                .bannerList(bannerResponseDtoList)
                 .notice(notice)
                 .myLocalPosts(myLocalPosts)
                 .myIndustryPosts(myIndustryPosts)
@@ -58,12 +69,14 @@ public class HomeService {
                 .build();
     }
 
-    @Transactional
-    public List<String> getNoticeUrl(){
-        return noticeImgUrlRepository.findAll().stream()
-                .map(url -> s3Service.getPreSignedDownloadUrl(url.getFileName()))
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public List<String> getNoticeUrl(){
+//        return noticeImgUrlRepository.findAll().stream()
+//                .map(url -> s3Service.getPreSignedDownloadUrl(url.getFileName()))
+//                .collect(Collectors.toList());
+//    }
+
+
 
     @Transactional
     public List<HomePostListDto> getLocalPosts(Location location){

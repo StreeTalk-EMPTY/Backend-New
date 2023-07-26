@@ -63,11 +63,11 @@ public class AdminController {
     /**
      * 이미지로 되어있는 공지사항 올리는 API
      * */
-    @PostMapping("/admin/noticeImg")
-    public ResponseEntity<MessageOnly> inputNoticeImg(@RequestParam("inputFiles") List<MultipartFile> multipartFile) throws IOException {
-        adminService.inputNoticeImg(multipartFile);
-        return new ResponseEntity<>(new MessageOnly(200,true,"create notice Success"), HttpStatus.OK);
-    }
+//    @PostMapping("/admin/noticeImg")
+//    public ResponseEntity<MessageOnly> inputNoticeImg(@RequestParam("inputFiles") List<MultipartFile> multipartFile) throws IOException {
+//        adminService.inputNoticeImg(multipartFile);
+//        return new ResponseEntity<>(new MessageOnly(200,true,"create notice Success"), HttpStatus.OK);
+//    }
 
     @GetMapping("/test/test")
     public Authentication test(@RequestBody LoginRequestDto loginRequestDto){
