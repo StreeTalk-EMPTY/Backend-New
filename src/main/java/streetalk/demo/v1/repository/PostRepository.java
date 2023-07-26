@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import streetalk.demo.v1.domain.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 @Repository
@@ -28,10 +29,13 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByIdLessThanAndBoard(Long postId, Board board, Pageable pageable);
 
     List<Post> findByIdLessThanAndBoardAndIsDeletedIsFalse(Long postId, Board board, Pageable pageable);
+    List<Post> findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Location location, LocalDateTime localDateTime);
 
-    List<Post> findByIsDeletedIsFalseAndCreatedDateAfterAndIndustry(LocalDateTime localDateTime, Industry industry);
-    List<Post> findByIsDeletedIsFalseAndCreatedDateAfterAndLocation(LocalDateTime localDateTime, Location location);
-    List<Post> findTop5AndIsDeletedIsFalseByOrderByCreatedDateDesc();
+//    List<Post> findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndIndustryOrderByLikeCountDesc(LocalDateTime localDateTime, Industry industry);
+    List<Post> findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Industry industry, LocalDateTime localDateTime);
+
+    List<Post> findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndLocationOrderByLikeCountDesc(LocalDateTime localDateTime, Location location);
+    List<Post> findTop5ByIsDeletedFalseOrderByCreatedDateDesc();
 
     List<Post> findByUser(User user);
 }
