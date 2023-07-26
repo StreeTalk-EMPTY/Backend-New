@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import streetalk.demo.v1.dto.Post.BannerResponseDto;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class HomeDto {
     String userName;
     String location;
     String industry;
-    List<String> mainNoticeImgUrl;
+    List<BannerResponseDto> bannerList;
     String notice;
     List<HomePostListDto> myLocalPosts;
     List<HomePostListDto> myIndustryPosts;
