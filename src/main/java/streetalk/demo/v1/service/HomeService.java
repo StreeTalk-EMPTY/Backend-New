@@ -80,9 +80,10 @@ public class HomeService {
 
     @Transactional
     public List<HomePostListDto> getLocalPosts(Location location){
-        List<Post> posts = postRepository.findByCreatedDateAfterAndLocation(LocalDateTime.now().minusDays(7), location)
+        List<Post> posts = postRepository.findByIsDeletedIsFalseAndCreatedDateAfterAndLocation(LocalDateTime.now().minusDays(7), location)
                 .stream()
-                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
+//                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
+                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
         return posts.stream()
@@ -92,9 +93,10 @@ public class HomeService {
 
     @Transactional
     public List<HomePostListDto> getIndustryPosts(Industry industry){
-        List<Post> posts = postRepository.findByCreatedDateAfterAndIndustry(LocalDateTime.now().minusDays(7), industry)
+        List<Post> posts = postRepository.findByIsDeletedIsFalseAndCreatedDateAfterAndIndustry(LocalDateTime.now().minusDays(7), industry)
                 .stream()
-                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
+//                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
+                .sorted(Comparator.comparing(Post::getLikeCount).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
         return posts.stream()
