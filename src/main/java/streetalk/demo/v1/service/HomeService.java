@@ -109,7 +109,7 @@ public class HomeService {
     @Transactional
     public List<HomePostListDto> getNewPosts(){
         List<Post> posts = postRepository
-                .findTop5ByIsDeletedFalseOrderByCreatedDateDesc();
+                .findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(LocalDateTime.now().minusDays(7));
         return posts.stream()
                 .map(post -> new HomePostListDto(post))
                 .collect(Collectors.toList());

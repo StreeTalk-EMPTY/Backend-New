@@ -103,10 +103,27 @@ public class PostService {
             postId = postRepository.findFirstByOrderByCreatedDateDesc().getId() + 1;
         }
 
-
-
-        List<Post> postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
         User currentUser = userService.getCurrentUser(req);
+        List<Post> postList = null;
+        // 지역 게시판
+        if (boardId == 5) {
+            Location location = currentUser.getLocation();
+            postList = postRepository.findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(location, postId, pageRequest);
+        }
+        // 업종 게시판
+        else if (boardId == 6) {
+            Industry industry = currentUser.getIndustry();
+            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, postId, pageRequest);
+
+        }
+        // HOT 게시판
+        else if (boardId == 7) {
+            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, 5L, LocalDateTime.now().minusDays(7));
+        }
+        // 나머지 게시판
+        else {
+            postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
+        }
 
         return toPostListDto(postList, currentUser);
 
