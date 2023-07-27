@@ -41,7 +41,7 @@ public class HomeService {
                 .map(boardLike ->  new LikeBoard(boardLike.getBoard().getBoardName(), boardLike.getBoard().getId()) )
                 .collect(Collectors.toList());
         List<Banner> bannerList = bannerRepository.findAll();
-        bannerList.sort(Comparator.comparing(Banner::getId).reversed());
+        bannerList.sort(Comparator.comparing(Banner::getId));
         List<BannerResponseDto> bannerResponseDtoList = new ArrayList<>();
 
         for (Banner banner : bannerList) {
