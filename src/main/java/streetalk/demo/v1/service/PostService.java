@@ -327,8 +327,11 @@ public class PostService {
                             .lockInfo(lockPostDto.getLockInfo())
                             .build());
             post.reportCountUp();
-            if (post.getReportCount()>=5){
-                post.setBlocked(Boolean.TRUE);
+//            if (post.getReportCount()>=5){
+            if (post.getReportCount()>=10 && !post.getIsPrivate()){
+                post.setIsDeleted(true);
+                postRepository.saveAndFlush(post);
+//                post.setBlocked(Boolean.TRUE);
             }
             return true;
         }
