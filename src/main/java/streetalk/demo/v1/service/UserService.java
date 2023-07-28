@@ -105,6 +105,7 @@ public class UserService {
 //            userName = "new user";
 //        } else
 //            userName = user.getName();
+        System.out.println(loginRequestDto.getLatitude());
         Location currentLocation = locationService.getKoLocation(loginRequestDto.getLongitude(), loginRequestDto.getLatitude());
 
         LoginResponseDto loginResponseDto = new LoginResponseDto(
