@@ -1,14 +1,12 @@
 package streetalk.demo.v1.dto.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 public class LoginRequestDto {
     private String phoneNum;
     private Double longitude;
