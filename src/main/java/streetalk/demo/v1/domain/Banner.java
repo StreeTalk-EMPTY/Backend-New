@@ -24,7 +24,6 @@ public class Banner extends BaseTimeEntity{
     @Column
     private String content;
 
-
     // 1 := Notice, 0 := Post
     @Column
     private boolean isNotice;
