@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import streetalk.demo.v1.domain.LinkedLocation;
 import streetalk.demo.v1.domain.Location;
@@ -53,9 +54,9 @@ public class  LocationService {
             Location location = locationRepository.findByFullName(fullName)
                     .orElseGet(()->createLocation(locationDetail));
             return location;
-        }catch (Exception e){
-            System.out.println("위치정보 추출 중 오류 발생!!!");
-            System.out.println(e);
+        }catch (HttpClientErrorException e){
+            return locationRepository.findById(9999L).orElseThrow();
+        } catch (URISyntaxException e) {
             throw new ArithmeticException(404, "While Sending Message Error");
         }
     }
