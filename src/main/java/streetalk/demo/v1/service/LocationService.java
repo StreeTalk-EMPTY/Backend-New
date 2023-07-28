@@ -54,6 +54,7 @@ public class  LocationService {
                     .orElseGet(()->createLocation(locationDetail));
             return location;
         }catch (URISyntaxException e){
+            System.out.println("위치정보 추출 중 오류 발생!!!");
             System.out.println(e);
             throw new ArithmeticException(404, "While Sending Message Error");
         }
@@ -72,6 +73,7 @@ public class  LocationService {
     @Transactional
     public List<NearCity> getNearCities(Location location){
         List<NearCity> nearCities = new ArrayList<>();
+
 
         List<LinkedLocation> linkedLocations = linkedLocationRepository.findAllByMainLocation(location);
         for (LinkedLocation linkedLocation : linkedLocations) {
