@@ -145,4 +145,16 @@ public class UserController {
         List<PostListDto> data = userService.getMyPostList(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "get My Post List Success", data), HttpStatus.OK);
     }
+
+    @GetMapping("/user/block/{blockedUserId}")
+    public ResponseEntity<MessageOnly> addBlockedUser(HttpServletRequest req, @PathVariable Long blockedUserId) {
+        userService.addBlockedUser(req, blockedUserId);
+        return new ResponseEntity<>(new MessageOnly(200, true, "blocked user success"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/block/{blockedUserId}")
+    public ResponseEntity<MessageOnly> deleteBlockedUser(HttpServletRequest req, @PathVariable Long blockedUserId) {
+        userService.deleteBlockedUser(req, blockedUserId);
+        return new ResponseEntity<>(new MessageOnly(200, true, "delete blocked user success"), HttpStatus.OK);
+    }
 }

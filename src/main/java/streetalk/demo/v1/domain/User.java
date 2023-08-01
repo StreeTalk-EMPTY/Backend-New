@@ -54,4 +54,5 @@ public class User extends BaseTimeEntity{
     public Integer countPost(){
         return this.posts.size();
     }
+
 }
