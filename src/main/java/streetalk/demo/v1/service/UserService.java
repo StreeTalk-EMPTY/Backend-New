@@ -412,7 +412,7 @@ public class UserService {
                 .user(currentUser)
                 .blockedUserId(blockedUserId)
                 .build();
-        blockedUserRepository.save(blockedUser);
+        currentUser.getBlockedUsers().add(blockedUserRepository.saveAndFlush(blockedUser));
     }
 
     public void deleteBlockedUser(HttpServletRequest req, Long blockedUserId) {
