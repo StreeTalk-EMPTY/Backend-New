@@ -28,7 +28,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findByIdLessThanAndBoard(Long postId, Board board, Pageable pageable);
 
-    List<Post> findByIdLessThanAndBoardAndIsDeletedIsFalse(Long postId, Board board, Pageable pageable);
+    // 메인 게시판 통합 => 모든 게시판
+    @Query("SELECT p FROM Post p WHERE p.board = :board AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.id < :postId AND p.isDeleted = false ORDER BY p.createdDate DESC")
+    List<Post> findByIdLessThanAndBoardAndIsDeletedIsFalse(Long postId, Board board, User user, Pageable pageable);
 
     // 홈 - 인기글 - 내지역 => 최근 일주일 좋아요 순 5개
     List<Post> findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Location location, LocalDateTime localDateTime);

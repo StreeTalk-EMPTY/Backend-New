@@ -123,7 +123,7 @@ public class PostService {
         }
         // 나머지 게시판
         else {
-            postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
+            postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, currentUser, pageRequest);
         }
 
         return toPostListDto(postList, currentUser);
