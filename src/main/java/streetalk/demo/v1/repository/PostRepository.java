@@ -34,7 +34,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Location location, LocalDateTime localDateTime);
 
     // 메인 게시판 내지역 => 지역 전체
-    List<Post> findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Location location, Long postId, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.location = :location AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.id < :postId AND p.isDeleted = false ORDER BY p.createdDate DESC")
+    List<Post> findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Location location, User user, Long postId, Pageable pageable);
 
 
 //    List<Post> findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndIndustryOrderByLikeCountDesc(LocalDateTime localDateTime, Industry industry);

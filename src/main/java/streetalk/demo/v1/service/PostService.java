@@ -108,7 +108,7 @@ public class PostService {
         // 지역 게시판
         if (boardId == 5) {
             Location location = currentUser.getLocation();
-            postList = postRepository.findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(location, postId, pageRequest);
+            postList = postRepository.findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(location, currentUser, postId, pageRequest);
         }
         // 업종 게시판
         else if (boardId == 6) {
