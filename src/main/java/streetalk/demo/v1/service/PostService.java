@@ -108,7 +108,7 @@ public class PostService {
         // 지역 게시판
         if (boardId == 5) {
             Location location = currentUser.getLocation();
-            postList = postRepository.findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(location, postId, pageRequest);
+            postList = postRepository.findByLocationAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(location, currentUser, postId, pageRequest);
         }
         // 업종 게시판
         else if (boardId == 6) {
@@ -119,11 +119,11 @@ public class PostService {
         }
         // HOT 게시판
         else if (boardId == 7) {
-            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, 5L, LocalDateTime.now().minusDays(7), pageRequest);
+            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, currentUser, 5L, LocalDateTime.now().minusDays(7), pageRequest);
         }
         // 나머지 게시판
         else {
-            postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, pageRequest);
+            postList = postRepository.findByIdLessThanAndBoardAndIsDeletedIsFalse(postId, board, currentUser, pageRequest);
         }
 
         return toPostListDto(postList, currentUser);
