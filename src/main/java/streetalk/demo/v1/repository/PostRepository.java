@@ -33,7 +33,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findByIdLessThanAndBoardAndIsDeletedIsFalse(Long postId, Board board, User user, Pageable pageable);
 
     // 홈 - 인기글 - 내지역 => 최근 일주일 좋아요 순 5개
-    List<Post> findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Location location, LocalDateTime localDateTime);
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND p.location = :location AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.createdDate > :localDateTime ORDER BY p.likeCount DESC")
+    List<Post> findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Location location, User user, LocalDateTime localDateTime, Pageable pageable);
 
     // 메인 게시판 내지역 => 지역 전체
     @Query("SELECT p FROM Post p WHERE p.location = :location AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.id < :postId AND p.isDeleted = false ORDER BY p.createdDate DESC")
@@ -43,7 +44,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 //    List<Post> findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndIndustryOrderByLikeCountDesc(LocalDateTime localDateTime, Industry industry);
 
     // 홈 - 인기글 - 내업종 => 최근 일주일 좋아요 순 5개
-    List<Post> findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Industry industry, LocalDateTime localDateTime);
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND p.industry = :industry AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.createdDate > :localDateTime ORDER BY p.likeCount DESC")
+    List<Post> findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Industry industry, User user, LocalDateTime localDateTime, Pageable pageable);
 
     // 메인 게시판 내업종 => 업종 전체
 //    @Query("SELECT p FROM Post p LEFT JOIN BlockedUser bu ON p.user.id = bu.blockedUserId WHERE p.industry = :industry AND p.id < :postId AND p.isDeleted = false AND (bu IS NULL OR bu.user.id <> :userId) ORDER BY p.createdDate DESC")
@@ -54,10 +56,12 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 //    List<Post> findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Industry industry, Long postId, Pageable pageable);
 
     // 홈 - 인기글 - 실시간 => 최근 일주일 좋아요 순 5개
-    List<Post> findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(LocalDateTime localDateTime);
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.createdDate > :localDateTime ORDER BY p.likeCount DESC")
+    List<Post> findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(User user, LocalDateTime localDateTime, Pageable pageable);
 
     // 메인 게시판 핫게시판 => 최근 일주일 좋아요 5개 이상 작성순
-    List<Post> findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(Long postId, Long LikeCountThreshold, LocalDateTime localDateTime, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.likeCount >= :likeCountThreshold AND p.createdDate > :localDateTime AND p.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.user = :user) AND p.id < :postId AND p.isDeleted = false ORDER BY p.createdDate DESC")
+    List<Post> findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(Long postId, User user, Long likeCountThreshold, LocalDateTime localDateTime, Pageable pageable);
 
 
     List<Post> findByUser(User user);

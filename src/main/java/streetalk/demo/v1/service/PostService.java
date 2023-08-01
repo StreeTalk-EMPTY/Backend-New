@@ -119,7 +119,7 @@ public class PostService {
         }
         // HOT 게시판
         else if (boardId == 7) {
-            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, 5L, LocalDateTime.now().minusDays(7), pageRequest);
+            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, currentUser, 5L, LocalDateTime.now().minusDays(7), pageRequest);
         }
         // 나머지 게시판
         else {

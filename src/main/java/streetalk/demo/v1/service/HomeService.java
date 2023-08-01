@@ -1,6 +1,9 @@
 package streetalk.demo.v1.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import streetalk.demo.v1.domain.*;
@@ -29,14 +32,15 @@ public class HomeService {
     private final BannerRepository bannerRepository;
     private final NoticeRepository noticeRepository;
     private final PostRepository postRepository;
-
+    private final int MAIN_POSTSIZE = 5;
     @Transactional
     public HomeDto getHome(HttpServletRequest req) {
         User user = userService.getCurrentUser(req);
         String notice = noticeRepository.findFirstByOrderByCreatedDateAsc().getTitle();
-        List<HomePostListDto> myLocalPosts = getLocalPosts(user.getLocation());
-        List<HomePostListDto> myIndustryPosts = getIndustryPosts(user.getIndustry());
-        List<HomePostListDto> newPosts = getNewPosts();
+        PageRequest pageRequest = PageRequest.of(0, MAIN_POSTSIZE, Sort.by(Sort.Direction.DESC, "likeCount"));
+        List<HomePostListDto> myLocalPosts = getLocalPosts(user, pageRequest);
+        List<HomePostListDto> myIndustryPosts = getIndustryPosts(user, pageRequest);
+        List<HomePostListDto> newPosts = getNewPosts(user, pageRequest);
         List<LikeBoard> likeBoardList = user.getBoardLikes().stream()
                 .map(boardLike ->  new LikeBoard(boardLike.getBoard().getBoardName(), boardLike.getBoard().getId()) )
                 .collect(Collectors.toList());
@@ -79,8 +83,8 @@ public class HomeService {
 
 
     @Transactional
-    public List<HomePostListDto> getLocalPosts(Location location){
-        List<Post> posts = postRepository.findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(location, LocalDateTime.now().minusDays(7));
+    public List<HomePostListDto> getLocalPosts(User user, Pageable pageable){
+        List<Post> posts = postRepository.findTop5ByLocationAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(user.getLocation(), user, LocalDateTime.now().minusDays(7), pageable);
 //        List<Post> posts = postRepository.findTop5ByIsDeletedIsFalseAndCreatedDateAfterAndLocationOrderByLikeCountDesc(LocalDateTime.now().minusDays(7), location);
 //                .stream()
 //                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
@@ -93,8 +97,8 @@ public class HomeService {
     }
 
     @Transactional
-    public List<HomePostListDto> getIndustryPosts(Industry industry){
-        List<Post> posts = postRepository.findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(industry, LocalDateTime.now().minusDays(7));
+    public List<HomePostListDto> getIndustryPosts(User user, Pageable pageable){
+        List<Post> posts = postRepository.findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(user.getIndustry(), user, LocalDateTime.now().minusDays(7), pageable);
 //        List<Post> posts = postRepository.findTop5ByIsDeletedFalseAndCreatedDateAfterAndIndustryOrderByLikeCountDesc(LocalDateTime.now().minusDays(7), industry);
 //                .stream()
 //                .sorted(Comparator.comparing(Post::getReplyCount).reversed())
@@ -107,9 +111,9 @@ public class HomeService {
     }
 
     @Transactional
-    public List<HomePostListDto> getNewPosts(){
+    public List<HomePostListDto> getNewPosts(User user, Pageable pageable){
         List<Post> posts = postRepository
-                .findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(LocalDateTime.now().minusDays(7));
+                .findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(user, LocalDateTime.now().minusDays(7), pageable);
         return posts.stream()
                 .map(post -> new HomePostListDto(post))
                 .collect(Collectors.toList());
