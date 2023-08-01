@@ -113,7 +113,8 @@ public class PostService {
         // 업종 게시판
         else if (boardId == 6) {
             Industry industry = currentUser.getIndustry();
-            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, postId, currentUser.getId(), pageRequest);
+            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, currentUser, postId, pageRequest);
+//            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, postId, currentUser.getId(), pageRequest);
 
         }
         // HOT 게시판
