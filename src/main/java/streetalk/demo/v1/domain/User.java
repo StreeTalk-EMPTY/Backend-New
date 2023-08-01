@@ -47,6 +47,9 @@ public class User extends BaseTimeEntity{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<BoardLike> boardLikes = new ArrayList<BoardLike>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @Builder.Default
+    private List<BlockedUser> blockedUsers = new ArrayList<>();
 
     public Integer countPost(){
         return this.posts.size();

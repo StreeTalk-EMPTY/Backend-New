@@ -20,7 +20,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     Post findFirstByOrderByCreatedDateDesc();
 
-    List<Post>findByTitleContaining(String word);
+    List<Post>findByTitleContainingOrContentContaining(String title, String content);
 
     List<Post> findPostsByBoardAndIndustryAndLocation(Board board, Industry industry, Location location);
 
@@ -43,13 +43,15 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findTop5ByIndustryAndIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(Industry industry, LocalDateTime localDateTime);
 
     // 메인 게시판 내업종 => 업종 전체
-    List<Post> findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Industry industry, Long postId, Pageable pageable);
+    @Query("SELECT p FROM Post p LEFT JOIN BlockedUser bu ON p.user.id = bu.blockedUserId WHERE p.industry = :industry AND p.id < :postId AND p.isDeleted = false AND (bu IS NULL OR bu.user.id <> :userId) ORDER BY p.createdDate DESC")
+    List<Post> findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Industry industry, Long postId, Long userId, Pageable pageable);
+//    List<Post> findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(Industry industry, Long postId, Pageable pageable);
 
     // 홈 - 인기글 - 실시간 => 최근 일주일 좋아요 순 5개
     List<Post> findTop5ByIsDeletedFalseAndCreatedDateAfterOrderByLikeCountDesc(LocalDateTime localDateTime);
 
     // 메인 게시판 핫게시판 => 최근 일주일 좋아요 5개 이상 작성순
-    List<Post> findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(Long postId, Long LikeCountThreshold, LocalDateTime localDateTime);
+    List<Post> findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(Long postId, Long LikeCountThreshold, LocalDateTime localDateTime, Pageable pageable);
 
 
     List<Post> findByUser(User user);

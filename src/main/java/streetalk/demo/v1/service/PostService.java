@@ -113,12 +113,12 @@ public class PostService {
         // 업종 게시판
         else if (boardId == 6) {
             Industry industry = currentUser.getIndustry();
-            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, postId, pageRequest);
+            postList = postRepository.findByIndustryAndIdLessThanAndIsDeletedFalseOrderByCreatedDateDesc(industry, postId, currentUser.getId(), pageRequest);
 
         }
         // HOT 게시판
         else if (boardId == 7) {
-            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, 5L, LocalDateTime.now().minusDays(7));
+            postList = postRepository.findByIdLessThanAndIsDeletedFalseAndLikeCountGreaterThanEqualAndCreatedDateAfterOrderByCreatedDateDesc(postId, 5L, LocalDateTime.now().minusDays(7), pageRequest);
         }
         // 나머지 게시판
         else {
@@ -279,7 +279,7 @@ public class PostService {
     @Transactional
     public List<Post> searchPost(HttpServletRequest req, String key){
         User user = userService.getCurrentUser(req);
-        List<Post>post = postRepository.findByTitleContaining(key);
+        List<Post> post = postRepository.findByTitleContainingOrContentContaining(key, key);
         return post;
     }
 
@@ -383,6 +383,7 @@ public class PostService {
                     .scrapCount(post.getScrapCount())
                     .likeCount(post.getLikeCount())
                     .replyCount(post.getReplyCount())
+                    .writerId(post.getUser().getId())
                     .build();
             data.add(postListDto);
         }
