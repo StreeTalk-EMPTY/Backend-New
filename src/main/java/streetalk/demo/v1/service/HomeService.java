@@ -51,7 +51,7 @@ public class HomeService {
         for (Banner banner : bannerList) {
             BannerResponseDto bannerResponseDto = BannerResponseDto
                     .builder()
-                    .title(banner.getTitle())
+                    .title(banner.getTitle()+"배포 테스트")
                     .content(banner.getContent())
                     .contentId(banner.getContentId())
                     .isNotice(banner.isNotice())
