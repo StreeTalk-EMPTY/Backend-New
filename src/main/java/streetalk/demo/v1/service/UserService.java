@@ -45,6 +45,7 @@ public class UserService {
     private final PostRepository postRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final ReplyRepository replyRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
     @Transactional
     public AuthResponseDto doAuth(String phoneNum) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
@@ -404,4 +405,21 @@ public class UserService {
         return userRepository.findUserById(userId)
                 .orElseThrow(() -> new ArithmeticException(404, "can't find user"));
     }
+
+    public void addBlockedUser(HttpServletRequest req, Long blockedUserId) {
+        User currentUser = getCurrentUser(req);
+        BlockedUser blockedUser = BlockedUser.builder()
+                .user(currentUser)
+                .blockedUserId(blockedUserId)
+                .build();
+        currentUser.getBlockedUsers().add(blockedUserRepository.saveAndFlush(blockedUser));
+    }
+
+    public void deleteBlockedUser(HttpServletRequest req, Long blockedUserId) {
+        User currentUser = getCurrentUser(req);
+        BlockedUser blockedUser = blockedUserRepository.findByUserAndBlockedUserId(currentUser, blockedUserId)
+                .orElseThrow(() -> new ArithmeticException(404, "can't find blockedUser"));
+        blockedUserRepository.delete(blockedUser);
+    }
+
 }
