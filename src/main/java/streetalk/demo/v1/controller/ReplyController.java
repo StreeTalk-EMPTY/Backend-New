@@ -20,23 +20,49 @@ public class ReplyController {
 
     private final ReplyService replyService;
 
+
+    /**
+     * 댓글 작성 API
+     * @param req
+     * @param replyDto
+     * @return
+     */
     @PostMapping("/reply")
     public ResponseEntity<MessageOnly> save(HttpServletRequest req, @RequestBody ReplyDto replyDto){
         replyService.saveReply(req, replyDto);
         return new ResponseEntity<>(new MessageOnly(200, true, "Reply Save Success"), HttpStatus.OK);
     }
 
+    /**
+     * 댓글 수정 API
+     * @param req
+     * @param replyDto
+     * @return
+     */
     @PutMapping("/reply")
     public ResponseEntity<MessageOnly> update(HttpServletRequest req, @RequestBody ReplyRequestDto replyDto) {
         replyService.updateReply(req, replyDto);
         return new ResponseEntity<>(new MessageOnly(200, true, "Reply Update Success"), HttpStatus.OK);
     }
 
+    /**
+     * 댓글 삭제 API
+     * @param req
+     * @param id
+     * @return
+     */
     @DeleteMapping("/reply/{replyId}")
     public ResponseEntity<MessageOnly> delete(HttpServletRequest req, @PathVariable("replyId") Long id) {
         replyService.deleteReply(req,id);
         return new ResponseEntity<>(new MessageOnly(200,true,"reply delete success"),HttpStatus.OK);
     }
+
+    /**
+     * 댓글 차단 API
+     * @param req
+     * @param lockReplyDto
+     * @return
+     */
     @PostMapping("/lockReply")
     public ResponseEntity<MessageWithData> lockReply(HttpServletRequest req, @RequestBody LockReplyDto lockReplyDto){
         Boolean data=replyService.lockReply(req, lockReplyDto);
