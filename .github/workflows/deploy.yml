@@ -36,8 +36,6 @@ jobs:
       # Gradle Build
     - name: Build with Gradle
       run:
-        touch .env
-        echo "${{ secrets.ENV }}" >> .env
         ./gradlew build -x test
 
       # Image Tagging
