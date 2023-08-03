@@ -33,28 +33,50 @@ public class PostController {
 
     private final HomeService homeService;
 
+    /**
+     * 홈 인기글 (지역/업종/실시간) 게시글 및 배너, 공지
+     * 컨트롤러 분리 예정
+     * @param req
+     * @return
+     */
     @GetMapping("/home")
     public ResponseEntity<MessageWithData>getHome(HttpServletRequest req){
         HomeDto data = homeService.getHome(req);
         return new ResponseEntity<>(new MessageWithData(200, true, "Get home Success", data), HttpStatus.OK);
     }
 
-    @PostMapping("/test/post")
-    public String testPost(HttpServletRequest req, @ModelAttribute PostDto postDto) {
-        postService.save(req, postDto);
-        return postDto.toString();
-    }
+    /**
+     * 글 작성 API
+     * @param req
+     * @param postDto
+     * @return
+     */
     @PostMapping("/post")
     public ResponseEntity<MessageOnly> save(HttpServletRequest req, @ModelAttribute PostDto postDto){
-        System.out.println("start POST /post");
-        System.out.println(postDto);
         postService.save(req, postDto);
         return new ResponseEntity<>(new MessageOnly(200, true, "post Save Success"), HttpStatus.OK);
     }
 
+    /**
+     * 게시글 삭제 API
+     * @param req
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<MessageOnly> deletePost(HttpServletRequest req, @PathVariable("postId") Long id) {
+        postService.deletePost(req,id);
+        return new ResponseEntity<>(new MessageOnly(200,true,"post delete Success"),HttpStatus.OK);
+    }
+
+    /**
+     * 글 세부 내용 전송 API
+     * @param req
+     * @param postId
+     * @return
+     */
     @GetMapping("/post/{postId}")
     public ResponseEntity<MessageWithData> getPostById(HttpServletRequest req, @PathVariable Long postId){
-        System.out.println("GET /post/{postId}");
         PostResponseDto data = postService.findPostById(req,postId);
 
         User user = userService.getCurrentUser(req);
@@ -72,15 +94,18 @@ paging의 정식 방법
 //        return new ResponseEntity<>(new MessageWithData(200, true, "get postLists", data), HttpStatus.OK);
 //    }
 
+    /**
+     * 특정 게시판의 글 중 postId 이하 특정 개수만큼 전송, postId 없는 경우 가장 최신글부터
+     * @param boardId
+     * @param postId
+     * @param req
+     * @return
+     */
     @GetMapping(value={"/post/list/{boardId}/{postId}", "/post/list/{boardId}"})
     public ResponseEntity<MessageWithData> getPostList(@PathVariable Long boardId, @PathVariable(required = false) Long postId, HttpServletRequest req){
         List<PostListDto> postListDtoList = postService.getPostListByPage(boardId, postId, req);
         User user = userService.getCurrentUser(req);
 
-//        for (PostListDto postListDto : postListDtoList) {
-            // Auth 확인 필요 -> writer 대신 writerId로 변경 필요
-//            postListDto.setHasAuthority(postService.hasAuthority(user, postListDto.getWriterId()));
-//        }
         BoardResponseDto data = BoardResponseDto
                 .builder()
                 .isBoardLike(userService.getIsBoardLike(user, boardId))
@@ -89,6 +114,13 @@ paging의 정식 방법
         return new ResponseEntity<>(new MessageWithData(200, true, "get postLists", data), HttpStatus.OK);
     }
 
+    /**
+     * 글 수정 API
+     * 이미지 관련 로직 수정 필요
+     * @param req
+     * @param postUpdateDto
+     * @return
+     */
     @PutMapping("/post")
     public ResponseEntity<MessageOnly> update(HttpServletRequest req, @RequestBody PostUpdateDto postUpdateDto) throws IOException {
         System.out.println(postUpdateDto);
@@ -96,34 +128,53 @@ paging의 정식 방법
         return new ResponseEntity<>(new MessageOnly(200,true,"post Update Success"),HttpStatus.OK);
     }
 
+    /**
+     * 게시글 좋아요/취소 API
+     * @param req
+     * @param id
+     * @return
+     */
     @PutMapping("/postLike/{postId}")
     public ResponseEntity<MessageWithData> postLike(HttpServletRequest req, @PathVariable("postId") Long id){
         Boolean data = postService.postLike(req, id);
         return new ResponseEntity<>(new MessageWithData(200,true,"post Like Success", data),HttpStatus.OK);
     }
 
+    /**
+     * 게시글 스크랩/취소 API
+     * @param req
+     * @param id
+     * @return
+     */
     @PutMapping("/postScrap/{postId}")
     public ResponseEntity<MessageWithData> scrapLike(HttpServletRequest req, @PathVariable("postId") Long id){
         Boolean data = postService.postScrap(req, id);
         return new ResponseEntity<>(new MessageWithData(200,true,"scrap Like Success", data),HttpStatus.OK);
     }
 
+    /**
+     * 단어가 제목/내용에 포함된 게시글 검색 API
+     * @param req
+     * @param key
+     * @return
+     */
     @GetMapping("/searchPost/{word}")
     public ResponseEntity<MessageWithData> postSearch(HttpServletRequest req, @PathVariable("word") String key){
         List<Post> postList = postService.searchPost(req,key);
         List<PostListDto> data = postService.toPostListDto(postList, userService.getCurrentUser(req));
         return new ResponseEntity<>(new MessageWithData(200, true, "search Post Success", data), HttpStatus.OK);
     }
+
+    /**
+     * 게시글 차단 API
+     * @param req
+     * @param lockPostDto
+     * @return
+     */
     @PostMapping("/lockPost")
     public ResponseEntity<MessageWithData> lockReply(HttpServletRequest req, @RequestBody LockPostDto lockPostDto){
         Boolean data=postService.lockPost(req, lockPostDto);
         return new ResponseEntity<>(new MessageWithData(200,true,"lock post  Success", data),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/post/{postId}")
-    public ResponseEntity<MessageOnly> deletePost(HttpServletRequest req, @PathVariable("postId") Long id) {
-        postService.deletePost(req,id);
-        return new ResponseEntity<>(new MessageOnly(200,true,"post delete Success"),HttpStatus.OK);
     }
 
 }

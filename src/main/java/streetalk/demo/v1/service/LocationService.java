@@ -45,7 +45,6 @@ public class  LocationService {
         headers.set("Authorization", apiKey);
         HttpEntity<String> body = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
-        LocationDto locationDto = new LocationDto();
         try{
             KakaoResponse kakaoResponse =
                 restTemplate.postForObject(new URI("https://dapi.kakao.com/v2/local/geo/coord2regioncode.JSON?x="+x+"&y="+y), body, KakaoResponse.class);

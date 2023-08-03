@@ -35,7 +35,8 @@ jobs:
 
       # Gradle Build
     - name: Build with Gradle
-      run: ./gradlew build -x test
+      run:
+        ./gradlew build -x test
 
       # Image Tagging
     - name: Docker meta
