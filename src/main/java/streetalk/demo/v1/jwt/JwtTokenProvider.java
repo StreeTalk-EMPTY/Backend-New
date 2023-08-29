@@ -1,6 +1,7 @@
 package streetalk.demo.v1.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -106,9 +107,11 @@ public class JwtTokenProvider {
                     .parseClaimsJws(jwtToken)
                     .getBody();
             return !claims.getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new ArithmeticException(404,"token expired you fucking idiot");
+//            e.printStackTrace();
+            throw new ArithmeticException(404,"token signing key is invalid");
         }
     }
 
