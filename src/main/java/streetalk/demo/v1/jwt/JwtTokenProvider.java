@@ -107,6 +107,7 @@ public class JwtTokenProvider {
                     .getBody();
             return !claims.getExpiration().before(new Date());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ArithmeticException(404,"token expired you fucking idiot");
         }
     }
