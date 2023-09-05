@@ -141,10 +141,7 @@ public class UserService {
             User user = getCurrentUser(req);
             return new RefreshTokenDto(jwtTokenProvider.refreshToken(user));
         } else {
-            // 임시로 refreshToken 재발급 처리만 해줌
-            User user = getCurrentUser(req);
-            return new RefreshTokenDto(jwtTokenProvider.refreshToken(user));
-//            throw new ArithmeticException(404, "token expired!!");
+            throw new ArithmeticException(404, "token expired!!");
         }
     }
 
